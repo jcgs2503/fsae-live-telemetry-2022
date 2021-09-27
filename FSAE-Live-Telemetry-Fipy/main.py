@@ -13,8 +13,8 @@ If you want to connect to LTE with fipy, uncomment the connectLTE() function.
 """
 The following code connects to the wifi with wifi_name and wifi_password.
 """
-wifi_name = "帥杰"
-wifi_password = "00000000"
+wifi_name = "example-wifi_name"
+wifi_password = "example-wifi_password"
 connectWiFi(wifi_name,wifi_password)
 
 """
