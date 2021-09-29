@@ -17,11 +17,11 @@ def init_can():
 If you want to use a list of accepted ids as a filter, set list=True, else, set list=False
 """
 def can_filter(can_o,list):
-    if(list=True){
+    if list==True:
         return can_o.soft_filter(CAN.FILTER_LIST, ACCEPTED_IDS_LIST)
-    }else{
+    else:
         return can_o.soft_filter(CAN.FILTER_RANGE, ACCEPTED_IDS_RANGE)
-    }
+    
 
 def print_can(can_o):
     return print('CAN Rx:', can_o.recv())
