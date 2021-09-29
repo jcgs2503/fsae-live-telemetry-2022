@@ -22,6 +22,6 @@ def test_with_wifi(wifi_name,wifi_password,db_name):
             firebase.patch("teststruct", {"tag {}".format(id): {"id":id,"timestamp":local_time,"data":id}})
             time.sleep(0.5)
 
-wifi_name = "帥杰"
-wifi_password = "00000000"
+wifi_name = "wifi_name"
+wifi_password = "wifi_password"
 test_with_wifi(wifi_name,wifi_password,"teststruct")
