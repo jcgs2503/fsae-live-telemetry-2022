@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DataProvider } from "./contexts/DataContext";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
 import Dashboard from "./screens/Dashboard";
 
 export default function App() {

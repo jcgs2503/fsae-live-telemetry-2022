@@ -9,12 +9,16 @@ export function useData() {
 }
 
 export function DataProvider({ children }) {
-	const [currentData, setCurrentData] = useState();
+	const dataGroupList = ["teststruct", "On Car Tests"];
+	const [currentData, setCurrentData] = useState({});
+
 	useEffect(() => {
-		const testRef = db.ref("teststruct");
-		testRef.on("value", (snapshot) => {
-			const testdata = snapshot.val();
-			setCurrentData(testdata);
+		dataGroupList.map((dg) => {
+			const testRef = db.ref(dg);
+			testRef.on("value", (snapshot) => {
+				const testdata = snapshot.val();
+				setCurrentData((prevdata) => ({ ...prevdata, [dg]: testdata }));
+			});
 		});
 	}, []);
 	const value = {
