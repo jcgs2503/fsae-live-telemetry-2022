@@ -26,6 +26,10 @@ export default function Dashboard() {
 	const options1 = Object.keys(currentData);
 	const [dataGroup, setDataGroup] = useState(options1[0]);
 
+	useEffect(() => {
+		setDataGroup(options1[0]);
+	}, [options1[0]]);
+
 	// const options2 = Object.keys(currentData[options1[0]]);
 	// const [dataNum, setDataNum] = useState(options2[0]);
 
@@ -61,7 +65,6 @@ export default function Dashboard() {
 			<Table>
 				<JsonToTable json={currentData[dataGroup]} />
 			</Table>
-			{options1}
 		</>
 	);
 }
