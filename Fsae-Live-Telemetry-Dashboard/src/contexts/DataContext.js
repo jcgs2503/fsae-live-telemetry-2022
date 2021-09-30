@@ -9,7 +9,7 @@ export function useData() {
 }
 
 export function DataProvider({ children }) {
-	const dataGroupList = ["teststruct"];
+	const dataGroupList = ["teststruct", "On Car Test"];
 	const [currentData, setCurrentData] = useState({});
 
 	useEffect(() => {
