@@ -3,7 +3,7 @@ from machine import CAN
 """DEFAULT CONSTANTS"""
 CAN_SPEED = 1000000
 Tx_pin = 'P22'
-Rx_pin = 'p23'
+Rx_pin = 'P23'
 QUEUE = 128
 ACCEPTED_IDS_LIST = [0x100, 0x200, 0x300, 0x400]
 ACCEPTED_IDS_RANGE = [(0x001, 0x010), (0x020, 0x030), (0x040, 0x050)]
@@ -21,7 +21,7 @@ def can_filter(can_o,list):
         return can_o.soft_filter(CAN.FILTER_LIST, ACCEPTED_IDS_LIST)
     else:
         return can_o.soft_filter(CAN.FILTER_RANGE, ACCEPTED_IDS_RANGE)
-    
+
 
 def print_can(can_o):
     return print('CAN Rx:', can_o.recv())

@@ -25,13 +25,19 @@ export default function Dashboard() {
 	const { currentData } = useData();
 	const options1 = Object.keys(currentData);
 	const [dataGroup, setDataGroup] = useState(options1[0]);
+	const [options2, setOptions2] = useState([]);
 
 	useEffect(() => {
 		setDataGroup(options1[0]);
 	}, [options1[0]]);
 
-	// const options2 = Object.keys(currentData[options1[0]]);
-	// const [dataNum, setDataNum] = useState(options2[0]);
+	useEffect(() => {
+		if (currentData && dataGroup && currentData[dataGroup]) {
+			setOptions2(Object.keys(currentData[dataGroup]));
+		}
+	}, [currentData, dataGroup]);
+
+	const [dataNum, setDataNum] = useState(options2[0]);
 
 	return (
 		<>
@@ -48,7 +54,7 @@ export default function Dashboard() {
 						</option>
 					))}
 				</SelectOption>
-				{/* <SelectOption
+				<SelectOption
 					as="select"
 					onChange={(e) => {
 						setDataNum(e.currentTarget.value);
@@ -59,9 +65,8 @@ export default function Dashboard() {
 							{op}
 						</option>
 					))}
-				</SelectOption> */}
+				</SelectOption>
 			</Select>
-
 			<Table>
 				<JsonToTable json={currentData[dataGroup]} />
 			</Table>

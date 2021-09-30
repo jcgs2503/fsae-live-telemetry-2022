@@ -19,9 +19,12 @@ def test_with_wifi(wifi_name,wifi_password,db_name):
 
         for id in range(10):
             local_time = time.localtime();
-            firebase.patch("teststruct", {"tag {}".format(id): {"id":id,"timestamp":local_time,"data":id}})
+            firebase.patch(db_name,{"tag {}".format(id): {"id":id,"timestamp":local_time,"data":id}})
+
             time.sleep(0.5)
 
-wifi_name = "wifi_name"
-wifi_password = "wifi_password"
-test_with_wifi(wifi_name,wifi_password,"teststruct")
+# wifi_name = "帥杰"
+# wifi_password = "00000000"
+# test_with_wifi(wifi_name,wifi_password,"teststruct/test-1")
+can = init_can()
+can_cb(can)
