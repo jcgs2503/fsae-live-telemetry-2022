@@ -39,7 +39,13 @@ export default function Dashboard() {
 		}
 	}, [currentData, dataGroup]);
 
-	const [dataNum, setDataNum] = useState(options2[0]);
+	const [dataNum, setDataNum] = useState();
+
+	useEffect(() => {
+		if (options2[0]) {
+			setDataNum(options2[0]);
+		}
+	}, [options2[0], dataGroup]);
 
 	return (
 		<>
@@ -47,8 +53,10 @@ export default function Dashboard() {
 				<SelectOption
 					as="select"
 					onChange={(e) => {
+						e.preventDefault();
 						setDataGroup(e.currentTarget.value);
 					}}
+					defaultValue={options1[0]}
 				>
 					{options1.map((op) => (
 						<option value={op} key={op}>
@@ -59,8 +67,10 @@ export default function Dashboard() {
 				<SelectOption
 					as="select"
 					onChange={(e) => {
+						e.preventDefault();
 						setDataNum(e.currentTarget.value);
 					}}
+					defaultValue={options2[0]}
 				>
 					{options2.map((op) => (
 						<option value={op} key={op}>
@@ -70,9 +80,13 @@ export default function Dashboard() {
 				</SelectOption>
 			</Select>
 			<Table>
-				<JsonToTable json={currentData[dataGroup]} />
+				{dataNum}
+				{currentData[dataGroup] && (
+					<JsonToTable json={currentData[dataGroup][dataNum]} />
+				)}
 			</Table>
-			{/* <Chart /> */}
+			{/* {currentData[dataGroup] && JSON.stringify(currentData[dataGroup])} */}
+			{/* {dataNum} */}
 		</>
 	);
 }
