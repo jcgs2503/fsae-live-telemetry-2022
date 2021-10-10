@@ -13,20 +13,24 @@ If you want to connect to LTE with fipy, uncomment the connectLTE() function.
 wifi_name = "帥杰"
 wifi_password = "00000000"
 
+
 def test_with_wifi(wifi_name,wifi_password,db_name):
     if connectWiFi(wifi_name,wifi_password):
         """
         The following code connects to our firebase realtime database and put the data into the database "teststruct"
         """
         firebase.setURL("https://fsae-live-telemetry-default-rtdb.firebaseio.com/")
+        now = time.time_ns()
 
-        for id in range(0,10):
-            local_time = time.localtime();
+        for id in range(30):
+            local_time = time.localtime()
             if id<10:
-                firebase.patch(db_name,{"tag 0{}".format(id): {"id":id,"timestamp":local_time,"data":id}})
+                firebase.patch(db_name,{"tag 0{}".format(id): {"id":id,"timestamp":local_time,"data":id}}, bg = False)
             else:
-                firebase.patch(db_name,{"tag {}".format(id): {"id":id,"timestamp":local_time,"data":id}})
-            time.sleep(0.5)
+                firebase.patch(db_name,{"tag {}".format(id): {"id":id,"timestamp":local_time,"data":id}}, bg = False)
+
+        end = time.time_ns()
+        print("took {}".format(end - now))
 
 
 test_with_wifi(wifi_name,wifi_password,"teststruct/test-3")
