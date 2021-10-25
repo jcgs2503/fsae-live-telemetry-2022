@@ -6,6 +6,7 @@ import {
 	Route,
 	Redirect,
 } from "react-router-dom";
+import Table from "./screens/Table";
 import Dashboard from "./screens/Dashboard";
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
 					<Route path="/" exact>
 						<Redirect to="/dashboard" />
 					</Route>
+					<Route path="/table" exact component={Table} />
 					<Route path="/dashboard" exact component={Dashboard} />
 				</Switch>
 			</DataProvider>

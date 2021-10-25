@@ -1,92 +1,111 @@
-import React, { useEffect, useState } from "react";
-import { useData } from "../contexts/DataContext";
-import { JsonToTable } from "react-json-to-table";
-import { Button, Form } from "react-bootstrap";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
+import logo from "../assets/LargeLogo.png";
+import Button from "react-bootstrap/Button";
+import OffCanvas from "react-bootstrap/Offcanvas";
+import Form from "react-bootstrap/Form";
+import MenuIcon from "@mui/icons-material/MenuRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
-import Chart from "../components/Chart";
-
-const SelectOption = styled(Form.Control)`
-	margin-left: 20px;
+const Page = styled.div`
+	width: 100%;
+	height: 100vh;
+	background-color: #32343a;
+	padding-top: 20px;
+	padding-left: 40px;
+	padding-right: 40px;
 `;
 
-const Select = styled.div`
-	margin-top: 20px;
-	margin-right: 20px;
+const Navbar = styled.div`
+	width: 100%;
+	height: fit-content;
 	display: flex;
-	flex-direction: row;
-	align-items: center;
 	justify-content: space-between;
+	align-items: center;
 `;
 
-const Table = styled.div`
-	margin: 20px 20px;
+const Logo = styled.img`
+	max-width: 200px;
+	width: 30%;
+	height: auto;
+`;
+
+const List = styled.div`
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+`;
+
+const ListItem = styled.button`
+	width: 100%;
+	height: 60px;
+	background-color: transparent;
+	border: none;
+	text-decoration: none;
+	border-bottom: 1px solid #d1d1d1;
+	padding-left: 20px;
+	padding-right: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	:hover {
+		background-color: #d1d1d1;
+	}
+`;
+
+const ListItemCreatedTime = styled.div`
+	font-size: 11px;
+	color: gray;
 `;
 
 export default function Dashboard() {
-	const { currentData } = useData();
-	const options1 = Object.keys(currentData);
-	const [dataGroup, setDataGroup] = useState(options1[0]);
-	const [options2, setOptions2] = useState([]);
+	const [show, setShow] = useState(false);
 
-	useEffect(() => {
-		setDataGroup(options1[0]);
-	}, [options1[0]]);
-
-	useEffect(() => {
-		if (currentData && dataGroup && currentData[dataGroup]) {
-			setOptions2(Object.keys(currentData[dataGroup]));
-		}
-	}, [currentData, dataGroup]);
-
-	const [dataNum, setDataNum] = useState();
-
-	useEffect(() => {
-		if (options2[0]) {
-			setDataNum(options2[0]);
-		}
-	}, [options2[0], dataGroup]);
-
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 	return (
-		<>
-			<Select>
-				<SelectOption
-					as="select"
-					onChange={(e) => {
-						e.preventDefault();
-						setDataGroup(e.currentTarget.value);
-					}}
-					defaultValue={options1[0]}
+		<Page>
+			<Navbar>
+				<Button variant="outline-light" onClick={handleShow}>
+					<MenuIcon />
+				</Button>
+
+				<Logo src={logo} />
+				<Button variant="outline-light">
+					<AddRoundedIcon />
+				</Button>
+			</Navbar>
+
+			<OffCanvas show={show} onHide={handleClose}>
+				<OffCanvas.Header
+					closeButton
+					style={{ borderBottom: "1px solid #d1d1d1" }}
 				>
-					{options1.map((op) => (
-						<option value={op} key={op}>
-							{op}
-						</option>
-					))}
-				</SelectOption>
-				<SelectOption
-					as="select"
-					onChange={(e) => {
-						e.preventDefault();
-						setDataNum(e.currentTarget.value);
-					}}
-					defaultValue={options2[0]}
+					<OffCanvas.Title>Data List</OffCanvas.Title>
+				</OffCanvas.Header>
+				<OffCanvas.Body
+					style={{ paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px" }}
 				>
-					{options2.map((op) => (
-						<option value={op} key={op}>
-							{op}
-						</option>
-					))}
-				</SelectOption>
-			</Select>
-			<Table>
-				{dataNum}
-				{currentData[dataGroup] && (
-					<JsonToTable json={currentData[dataGroup][dataNum]} />
-				)}
-			</Table>
-			{/* {currentData[dataGroup] && JSON.stringify(currentData[dataGroup])} */}
-			{/* {dataNum} */}
-		</>
+					<List>
+						<ListItem>
+							<Form.Control type="text" placeholder="Start New Test" />
+						</ListItem>
+						<ListItem>
+							<div>test #3</div>
+							<ListItemCreatedTime>2021/10/25 20:08:25</ListItemCreatedTime>
+						</ListItem>
+						<ListItem>
+							<div>test #2</div>
+							<ListItemCreatedTime>2021/10/22 22:05:01</ListItemCreatedTime>
+						</ListItem>
+						<ListItem>
+							<div>test #1</div>
+							<ListItemCreatedTime>2021/10/20 16:15:30</ListItemCreatedTime>
+						</ListItem>
+					</List>
+				</OffCanvas.Body>
+			</OffCanvas>
+		</Page>
 	);
 }
