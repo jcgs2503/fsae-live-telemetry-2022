@@ -6,6 +6,8 @@ import OffCanvas from "react-bootstrap/Offcanvas";
 import Form from "react-bootstrap/Form";
 import MenuIcon from "@mui/icons-material/MenuRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import ListItem from "../components/DataListItem";
+import { useData } from "../contexts/DataContext";
 
 const Page = styled.div`
 	width: 100%;
@@ -14,6 +16,10 @@ const Page = styled.div`
 	padding-top: 20px;
 	padding-left: 40px;
 	padding-right: 40px;
+	@media (max-width: 600px) {
+		padding-left: 20px;
+		padding-right: 10px;
+	}
 `;
 
 const Navbar = styled.div`
@@ -36,34 +42,35 @@ const List = styled.div`
 	flex-direction: column;
 `;
 
-const ListItem = styled.button`
-	width: 100%;
-	height: 60px;
-	background-color: transparent;
-	border: none;
-	text-decoration: none;
-	border-bottom: 1px solid #d1d1d1;
-	padding-left: 20px;
-	padding-right: 20px;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: center;
-	:hover {
-		background-color: #d1d1d1;
-	}
-`;
-
-const ListItemCreatedTime = styled.div`
-	font-size: 11px;
-	color: gray;
+const EditTitle = styled.div`
+	padding-left: 18px;
+	font-size: 18px;
+	font-weight: bold;
 `;
 
 export default function Dashboard() {
 	const [show, setShow] = useState(false);
+	const [rightShow, setRightShow] = useState(false);
+	const [selectedData, setSelectedData] = useState("test #3");
+	let metaData = [
+		{ name: "test #1", createdTime: "2021/10/25 20:08:25" },
+		{ name: "test #2", createdTime: "2021/10/22 16:25:36" },
+		{ name: "test #3", createdTime: "2021/10/20 08:46:44" },
+	];
+	const { dbc } = useData();
+	metaData = metaData.reverse();
+	const dbcDataName = dbc["params"].map((e) => e["name"]);
+	let dbcDataNameDetail = [];
+	dbc["params"].forEach((e) => {
+		let names = e["signals"].map((ele) => ele["name"]);
+		dbcDataNameDetail[e["name"]] = names;
+	});
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const handleRightShow = () => setRightShow(true);
+	const handleRightClose = () => setRightShow(false);
+
 	return (
 		<Page>
 			<Navbar>
@@ -72,7 +79,7 @@ export default function Dashboard() {
 				</Button>
 
 				<Logo src={logo} />
-				<Button variant="outline-light">
+				<Button variant="outline-light" onClick={handleRightShow}>
 					<AddRoundedIcon />
 				</Button>
 			</Navbar>
@@ -88,22 +95,29 @@ export default function Dashboard() {
 					style={{ paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px" }}
 				>
 					<List>
-						<ListItem>
-							<Form.Control type="text" placeholder="Start New Test" />
-						</ListItem>
-						<ListItem>
-							<div>test #3</div>
-							<ListItemCreatedTime>2021/10/25 20:08:25</ListItemCreatedTime>
-						</ListItem>
-						<ListItem>
-							<div>test #2</div>
-							<ListItemCreatedTime>2021/10/22 22:05:01</ListItemCreatedTime>
-						</ListItem>
-						<ListItem>
-							<div>test #1</div>
-							<ListItemCreatedTime>2021/10/20 16:15:30</ListItemCreatedTime>
-						</ListItem>
+						<ListItem createNew />
+
+						{metaData.map((e) => (
+							<ListItem
+								name={e.name}
+								createdTime={e.createdTime}
+								active={selectedData === e.name}
+								setSelectedData={setSelectedData}
+							/>
+						))}
 					</List>
+				</OffCanvas.Body>
+			</OffCanvas>
+			<OffCanvas show={rightShow} onHide={handleRightClose} placement="end">
+				<OffCanvas.Header closeButton>
+					<OffCanvas.Title>Edit Dashboard</OffCanvas.Title>
+				</OffCanvas.Header>
+				<OffCanvas.Body
+					style={{ paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px" }}
+				>
+					<EditTitle>Selected</EditTitle>
+					<List>BRK_IR_Internal_Temperature</List>
+					<EditTitle>Available Data</EditTitle>
 				</OffCanvas.Body>
 			</OffCanvas>
 		</Page>

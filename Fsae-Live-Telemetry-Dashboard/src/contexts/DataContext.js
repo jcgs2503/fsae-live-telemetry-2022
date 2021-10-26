@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import firebase from "../firebase";
+const dbc = require("./config.json");
 
 const DataContext = React.createContext();
 const db = firebase.database();
@@ -23,6 +24,7 @@ export function DataProvider({ children }) {
 	}, []);
 	const value = {
 		currentData,
+		dbc,
 	};
 
 	return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
