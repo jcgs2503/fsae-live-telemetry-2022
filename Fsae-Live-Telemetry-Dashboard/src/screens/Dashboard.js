@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as d3 from "d3";
 import styled from "@emotion/styled";
 import logo from "../assets/LargeLogo.png";
 import Button from "react-bootstrap/Button";
@@ -59,6 +60,15 @@ export default function Dashboard() {
 		{ name: "test #2", createdTime: "2021/10/22 16:25:36" ,data: [{date: "10/12/2021", price:"10"},{date: "10/13/2021", price:"5"},{date: "10/14/2021", price:"20"},{date: "10/15/2021", price:"5"}]},
 		{ name: "test #3", createdTime: "2021/10/20 08:46:44" , data: [{date: "10/12/2021", price:"6"},{date: "10/13/2021", price:"15"},{date: "10/14/2021", price:"150"},{date: "10/15/2021", price:"1"}]},
 	];
+
+	metaData.forEach((d) => {
+		const parseDate = d3.timeParse("%m/%d/%Y");
+		d.data.forEach((i) => {
+			i.date = parseDate(i.date);
+			i.price = Number(i.price);
+		});
+
+	});
 	const [data, setData] = useState(metaData[0].data);
 
 	const { dbc } = useData();
@@ -77,6 +87,11 @@ export default function Dashboard() {
 
 
 	
+
+	
+	
+
+
 
 	return (
 		<Page>

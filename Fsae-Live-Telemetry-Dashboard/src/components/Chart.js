@@ -18,28 +18,18 @@ color = "OrangeRed";
 
 // This will generate the chart
 const [activeIndex, setActiveIndex] = React.useState(null),
-[data, setData] = React.useState(props.data_json);
+[data, setData] = React.useState([]);
 
 
 
 
-React.useEffect(() => {
-	var d = data;
-	const parseDate = d3.timeParse("%m/%d/%Y");
-		d.forEach((i) => {
-			i.date = parseDate(i.date);
-			i.price = Number(i.price);
-		});
-		setData(d);
-	  return () => undefined;
-  }, []);
 
-const yMinValue = d3.min(data, (d) => d.price),
-yMaxValue = d3.max(data, (d) => d.price);
+const yMinValue = d3.min(props.data_json, (d) => d.price),
+yMaxValue = d3.max(props.data_json, (d) => d.price);
 
 const getX = d3
 .scaleTime()
-.domain(d3.extent(data, (d) => d.date))
+.domain(d3.extent(props.data_json, (d) => d.date))
 .range([0, width]);
 
 const getY = d3
@@ -61,20 +51,20 @@ const linePath = d3
 .line()
 .x((d) => getX(d.date))
 .y((d) => getY(d.price))
-.curve(d3.curveMonotoneX)(data);
+.curve(d3.curveMonotoneX)(props.data_json);
 
 const areaPath = d3
 .area()
 .x((d) => getX(d.date))
 .y0((d) => getY(d.price))
 .y1(() => getY(yMinValue - 1))
-.curve(d3.curveMonotoneX)(data);
+.curve(d3.curveMonotoneX)(props.data_json);
 
 
 const handleMouseMove = (e) => {
 	const bisect = d3.bisector((d) => d.date).left,
 		x0 = getX.invert(d3.pointer(e, this)[0]),
-		index = bisect(data, x0, 1);
+		index = bisect(props.data_json, x0, 1);
 	setActiveIndex(index);
 };
 
@@ -124,7 +114,7 @@ return (
 				</text>
 			</a>
   
-			{data.map((item, index) => {
+			{props.data_json.map((item, index) => {
 				return (
 					<g key={index}>
 					// hovering text 
