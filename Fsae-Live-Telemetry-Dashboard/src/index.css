@@ -2,3 +2,48 @@
 	margin: 0px;
 	font-family: "Open Sans", sans-serif;
 }
+
+.div-center{
+
+		padding: 80px 40px;
+		margin: auto;
+
+	  margin-bottom: 10px;
+
+		font-family: Helvetica;
+		/* background: darkslategray; */
+	  
+	  
+}
+
+
+  
+  .wrapper {
+	width: 50%;
+	/* font-size: 16px;
+	color: #666;
+	margin: auto;
+  	width: 50%;
+	  margin-bottom: 10px;
+  	padding: 10px; */
+  }
+  
+  svg {
+	overflow: visible;
+  }
+  
+  text {
+	fill: gainsboro;
+	color: gainsboro;
+	font-size: 16px;
+  }
+  
+  .subtitle text {
+	text-decoration: underline;
+	font-size: 12px;
+  }
+  
+  .axis .domain,
+  .axis.xAxis line {
+	display: none;
+  }

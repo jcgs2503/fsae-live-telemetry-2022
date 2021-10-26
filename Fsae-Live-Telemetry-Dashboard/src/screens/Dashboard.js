@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/MenuRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ListItem from "../components/DataListItem";
 import { useData } from "../contexts/DataContext";
+import Chart from "../components/Chart";
 
 const Page = styled.div`
 	width: 100%;
@@ -51,12 +52,15 @@ const EditTitle = styled.div`
 export default function Dashboard() {
 	const [show, setShow] = useState(false);
 	const [rightShow, setRightShow] = useState(false);
-	const [selectedData, setSelectedData] = useState("test #3");
+	const [selectedData, setSelectedData] = useState("test #1");
+	
 	let metaData = [
-		{ name: "test #1", createdTime: "2021/10/25 20:08:25" },
-		{ name: "test #2", createdTime: "2021/10/22 16:25:36" },
-		{ name: "test #3", createdTime: "2021/10/20 08:46:44" },
+		{ name: "test #1", createdTime: "2021/10/25 20:08:25" , data: [{date: "10/12/2021", price:"20"},{date: "10/13/2021", price:"5"},{date: "10/14/2021", price:"8"},{date: "10/15/2021", price:"10"}]},
+		{ name: "test #2", createdTime: "2021/10/22 16:25:36" ,data: [{date: "10/12/2021", price:"10"},{date: "10/13/2021", price:"5"},{date: "10/14/2021", price:"20"},{date: "10/15/2021", price:"5"}]},
+		{ name: "test #3", createdTime: "2021/10/20 08:46:44" , data: [{date: "10/12/2021", price:"6"},{date: "10/13/2021", price:"15"},{date: "10/14/2021", price:"150"},{date: "10/15/2021", price:"1"}]},
 	];
+	const [data, setData] = useState(metaData[0].data);
+
 	const { dbc } = useData();
 	metaData = metaData.reverse();
 	const dbcDataName = dbc["params"].map((e) => e["name"]);
@@ -71,6 +75,9 @@ export default function Dashboard() {
 	const handleRightShow = () => setRightShow(true);
 	const handleRightClose = () => setRightShow(false);
 
+
+	
+
 	return (
 		<Page>
 			<Navbar>
@@ -79,10 +86,15 @@ export default function Dashboard() {
 				</Button>
 
 				<Logo src={logo} />
+
+				
+
+
 				<Button variant="outline-light" onClick={handleRightShow}>
 					<AddRoundedIcon />
 				</Button>
 			</Navbar>
+			
 
 			<OffCanvas show={show} onHide={handleClose}>
 				<OffCanvas.Header
@@ -100,14 +112,22 @@ export default function Dashboard() {
 						{metaData.map((e) => (
 							<ListItem
 								name={e.name}
+								data = {e.data}
 								createdTime={e.createdTime}
 								active={selectedData === e.name}
 								setSelectedData={setSelectedData}
+								setData ={setData}
 							/>
 						))}
 					</List>
 				</OffCanvas.Body>
 			</OffCanvas>
+			<div class='div-center'>
+			<Chart data_json ={data} label={selectedData} ></Chart>
+
+			</div>
+
+			
 			<OffCanvas show={rightShow} onHide={handleRightClose} placement="end">
 				<OffCanvas.Header closeButton>
 					<OffCanvas.Title>Edit Dashboard</OffCanvas.Title>

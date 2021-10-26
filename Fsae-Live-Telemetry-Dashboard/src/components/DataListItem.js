@@ -2,6 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { create } from "@mui/material/styles/createTransitions";
 import Form from "react-bootstrap/Form";
+import { curveNatural } from "d3-shape";
 
 const ListItem = styled.button`
 	width: 100%;
@@ -55,6 +56,8 @@ export default function DataListItem({
 	createdTime,
 	createNew,
 	setSelectedData,
+	data,
+	setData
 }) {
 	if (active) {
 		return (
@@ -87,6 +90,8 @@ export default function DataListItem({
 			<ListItem
 				onClick={() => {
 					setSelectedData(name);
+					setData(data);
+					
 				}}
 			>
 				<>
