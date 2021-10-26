@@ -57,7 +57,8 @@ export default function DataListItem({
 	createNew,
 	setSelectedData,
 	data,
-	setData
+	setData,
+	id,
 }) {
 	if (active) {
 		return (
@@ -89,14 +90,12 @@ export default function DataListItem({
 		return (
 			<ListItem
 				onClick={() => {
-					setSelectedData(name);
-					setData(data);
-					
+					setSelectedData(id);
 				}}
 			>
 				<>
 					<div>{name}</div>
-					
+
 					<ListItemCreatedTime>{createdTime}</ListItemCreatedTime>
 				</>
 			</ListItem>
