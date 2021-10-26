@@ -97,7 +97,7 @@ return (
 			<text
 				transform={"rotate(-90)"}
 				x={0 - height / 2} y={0 - margin.left} dy="1em">
-				{"USD"}
+				{"y axis"}
 			</text>
 		  // chart title
 			<text
@@ -107,10 +107,10 @@ return (
 		  // chart subtitle
 			<a
 				className="subtitle"
-				href="https://www.moex.com/ru/index/rtsusdcur.aspx?tid=2552"
+				
 				target="_blank">
 				<text x="0" y={height + 50}>
-					{"Source: Moscow Exchange"}
+					{"Test Graph"}
 				</text>
 			</a>
   
