@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useData } from "../contexts/DataContext";
 import { JsonToTable } from "react-json-to-table";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import styled from "@emotion/styled";
-
-import Chart from "../components/Chart";
 
 const SelectOption = styled(Form.Control)`
 	margin-left: 20px;

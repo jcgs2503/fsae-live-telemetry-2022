@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { create } from "@mui/material/styles/createTransitions";
 import Form from "react-bootstrap/Form";
-import { curveNatural } from "d3-shape";
 
 const ListItem = styled.button`
 	width: 100%;

@@ -3,13 +3,12 @@ import * as d3 from "d3";
 import styled from "@emotion/styled";
 import logo from "../assets/LargeLogo.png";
 import Button from "react-bootstrap/Button";
-import OffCanvas from "react-bootstrap/Offcanvas";
-import Form from "react-bootstrap/Form";
 import MenuIcon from "@mui/icons-material/MenuRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import ListItem from "../components/DataListItem";
 import { useData } from "../contexts/DataContext";
 import Chart from "../components/Chart";
+import LeftOffCanvas from "../components/LeftOffCanvas";
+import RightOffCanvas from "../components/RightOffCanvas";
 
 const Page = styled.div`
 	width: 100%;
@@ -36,18 +35,6 @@ const Logo = styled.img`
 	max-width: 200px;
 	width: 30%;
 	height: auto;
-`;
-
-const List = styled.div`
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-`;
-
-const EditTitle = styled.div`
-	padding-left: 18px;
-	font-size: 18px;
-	font-weight: bold;
 `;
 
 const ChartStyle = styled.div`
@@ -165,46 +152,18 @@ export default function Dashboard() {
 					label={metaData[selectedData].name}
 				></Chart>
 			</ChartStyle>
+			<LeftOffCanvas
+				show={show}
+				handleClose={handleClose}
+				metaData={metaData}
+				selectedData={selectedData}
+				setSelectedData={setSelectedData}
+			/>
 
-			<OffCanvas show={show} onHide={handleClose}>
-				<OffCanvas.Header
-					closeButton
-					style={{ borderBottom: "1px solid #d1d1d1" }}
-				>
-					<OffCanvas.Title>Data List</OffCanvas.Title>
-				</OffCanvas.Header>
-				<OffCanvas.Body
-					style={{ paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px" }}
-				>
-					<List>
-						<ListItem createNew />
-
-						{metaData.map((e, idx) => (
-							<ListItem
-								id={idx}
-								name={e.name}
-								data={e.data}
-								createdTime={e.createdTime}
-								active={selectedData === idx}
-								setSelectedData={setSelectedData}
-							/>
-						))}
-					</List>
-				</OffCanvas.Body>
-			</OffCanvas>
-
-			<OffCanvas show={rightShow} onHide={handleRightClose} placement="end">
-				<OffCanvas.Header closeButton>
-					<OffCanvas.Title>Edit Dashboard</OffCanvas.Title>
-				</OffCanvas.Header>
-				<OffCanvas.Body
-					style={{ paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px" }}
-				>
-					<EditTitle>Selected</EditTitle>
-					<List>BRK_IR_Internal_Temperature</List>
-					<EditTitle>Available Data</EditTitle>
-				</OffCanvas.Body>
-			</OffCanvas>
+			<RightOffCanvas
+				rightShow={rightShow}
+				handleRightClose={handleRightClose}
+			/>
 		</Page>
 	);
 }

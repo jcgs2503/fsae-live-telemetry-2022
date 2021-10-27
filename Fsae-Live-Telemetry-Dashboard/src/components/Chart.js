@@ -1,11 +1,9 @@
-import React, { useRef } from "react";
-import ReactDOM from "react-dom";
+import React from "react";
 import * as d3 from "d3";
 // import LineChart from "react-linechart";
 // import "../node_modules/react-linechart/dist/styles.css";
 
 import "../index.css";
-import { propTypes } from "react-bootstrap/esm/Image";
 
 export default function Chart(props) {
 	const margin = { top: 40, right: 80, bottom: 60, left: 50 },
