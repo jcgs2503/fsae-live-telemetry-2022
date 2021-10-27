@@ -115,11 +115,11 @@ export default function Chart(props) {
 							<circle
 								cx={getX(item.date)}
 								cy={getY(item.price)}
-								r={index === activeIndex ? 6 : 4}
+								r={index === activeIndex ? 4 : 2}
 								fill={color}
 								strokeWidth={index === activeIndex ? 2 : 0}
 								stroke="#fff"
-								style={{ transition: "ease-out .1s" }}
+								// style={{ transition: "ease-out .1s" }}
 							/>
 						</g>
 					);
