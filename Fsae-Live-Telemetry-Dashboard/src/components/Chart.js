@@ -121,7 +121,7 @@ export default function Chart(props) {
 								fill={color}
 								strokeWidth={index === activeIndex ? 2 : 0}
 								stroke="#fff"
-								style={{ transition: "ease-out .1s" }}
+								// style={{ transition: "ease-out .1s" }}
 							/>
 						</g>
 					);
