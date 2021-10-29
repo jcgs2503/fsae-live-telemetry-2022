@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { select } from "d3";
+import ListItemItem from "./DataListItemItem";
 
 const List = styled.div`
 	width: 100%;
@@ -19,7 +20,9 @@ const ListItem = styled.div`
 	border-radius: 4px;
 	width: 100%;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
+	align-items: center;
 	padding-top: 13px;
 	padding-bottom: 13px;
 	border: 1px #dbdbdb solid;
@@ -30,6 +33,7 @@ const ListItem = styled.div`
 		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	}
 `;
+
 const EditTitle = styled.div`
 	padding-left: 18px;
 	padding-right: 18px;
@@ -52,6 +56,7 @@ export default function RightOffCanvas({
 	rightShow,
 	handleRightClose,
 	dbcDataName,
+	dbcDataNameDetail,
 }) {
 	const [selectedDBC, setSelectedDBC] = useState([]);
 	const [draggableDBC, setDraggableDBC] = useState(dbcDataName);
@@ -101,9 +106,16 @@ export default function RightOffCanvas({
 
 	useEffect(() => {
 		setFilteredDraggableDBC(
-			draggableDBC.filter((item) => item.name.toLowerCase().startsWith(search))
+			draggableDBC.filter(
+				(item) =>
+					item.name.toLowerCase().includes(search) ||
+					dbcDataNameDetail[item.name].findIndex((name) => {
+						return name.toLowerCase().includes(search);
+					}) != -1
+			)
 		);
 	}, [search]);
+
 	return (
 		<OffCanvas show={rightShow} onHide={handleRightClose} placement="end">
 			<OffCanvas.Header closeButton>
@@ -150,6 +162,13 @@ export default function RightOffCanvas({
 															{...provided.dragHandleProps}
 														>
 															{item.name}
+															{dbcDataNameDetail[item.name].map((e) => (
+																<ListItemItem
+																	display={true}
+																	name={e}
+																	checked={true}
+																/>
+															))}
 														</ListItem>
 													)}
 												</Draggable>
@@ -190,28 +209,42 @@ export default function RightOffCanvas({
 											{...provided.droppableProps}
 											style={{ minHeight: "30px" }}
 										>
-											{draggableDBC.map(
-												(item, index) =>
-													filteredDraggableDBC.includes(item) && (
-														<Draggable
-															// adding a key is important!
-															key={`${item.name}-${item.id}`}
-															draggableId={`${item.name}-${item.id}`}
-															index={index}
-														>
-															{(provided, snapshot) => (
-																<ListItem
-																	ref={provided.innerRef}
-																	{...provided.draggableProps}
-																	{...provided.dragHandleProps}
-																	onClick={Select}
-																>
-																	{item.name}
-																</ListItem>
-															)}
-														</Draggable>
-													)
-											)}
+											{draggableDBC
+												.sort(function (a, b) {
+													var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+													var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+													if (nameA < nameB) {
+														return -1;
+													}
+													if (nameA > nameB) {
+														return 1;
+													}
+
+													// names must be equal
+													return 0;
+												})
+												.map(
+													(item, index) =>
+														filteredDraggableDBC.includes(item) && (
+															<Draggable
+																// adding a key is important!
+																key={`${item.name}-${item.id}`}
+																draggableId={`${item.name}-${item.id}`}
+																index={index}
+															>
+																{(provided, snapshot) => (
+																	<ListItem
+																		ref={provided.innerRef}
+																		{...provided.draggableProps}
+																		{...provided.dragHandleProps}
+																		onClick={Select}
+																	>
+																		{item.name}
+																	</ListItem>
+																)}
+															</Draggable>
+														)
+												)}
 											{provided.placeholder}
 										</div>
 									);

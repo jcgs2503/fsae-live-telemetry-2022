@@ -98,16 +98,30 @@ export default function Dashboard() {
 
 	const [metaData, setMetaData] = useState(initialMetaData.reverse());
 	const { dbc } = useData();
-	const dbcDataName = dbc["params"].map((e, idx) => ({
-		name: e["name"],
-		id: `${idx}`,
-	}));
+	const dbcDataName = dbc["params"]
+		.map((e, idx) => ({
+			name: e["name"],
+			id: `${idx}`,
+		}))
+		.sort(function (a, b) {
+			var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+			var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+			if (nameA < nameB) {
+				return -1;
+			}
+			if (nameA > nameB) {
+				return 1;
+			}
+
+			// names must be equal
+			return 0;
+		});
 	let dbcDataNameDetail = [];
 	dbc["params"].forEach((e) => {
 		let names = e["signals"].map((ele) => ele["name"]);
+		names = names.sort();
 		dbcDataNameDetail[e["name"]] = names;
 	});
-	console.log(dbcDataNameDetail);
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
@@ -168,6 +182,7 @@ export default function Dashboard() {
 				rightShow={rightShow}
 				handleRightClose={handleRightClose}
 				dbcDataName={dbcDataName}
+				dbcDataNameDetail={dbcDataNameDetail}
 			/>
 		</Page>
 	);
