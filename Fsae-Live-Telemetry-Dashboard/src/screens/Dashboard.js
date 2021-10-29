@@ -98,12 +98,16 @@ export default function Dashboard() {
 
 	const [metaData, setMetaData] = useState(initialMetaData.reverse());
 	const { dbc } = useData();
-	const dbcDataName = dbc["params"].map((e) => e["name"]);
+	const dbcDataName = dbc["params"].map((e, idx) => ({
+		name: e["name"],
+		id: `${idx}`,
+	}));
 	let dbcDataNameDetail = [];
 	dbc["params"].forEach((e) => {
 		let names = e["signals"].map((ele) => ele["name"]);
 		dbcDataNameDetail[e["name"]] = names;
 	});
+	console.log(dbcDataNameDetail);
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
@@ -163,6 +167,7 @@ export default function Dashboard() {
 			<RightOffCanvas
 				rightShow={rightShow}
 				handleRightClose={handleRightClose}
+				dbcDataName={dbcDataName}
 			/>
 		</Page>
 	);
