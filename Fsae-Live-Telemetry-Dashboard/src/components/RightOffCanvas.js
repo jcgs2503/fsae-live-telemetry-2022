@@ -110,7 +110,7 @@ export default function RightOffCanvas({
 				(item) =>
 					item.name.toLowerCase().includes(search) ||
 					dbcDataNameDetail[item.name].findIndex((name) => {
-						return name.toLowerCase().includes(search);
+						return name.toLowerCase().includes(search.replace(" ", "_"));
 					}) != -1
 			)
 		);
