@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { select } from "d3";
+import { useData } from "../contexts/DataContext";
 import ListItemItem from "./DataListItemItem";
 
 const List = styled.div`
@@ -58,10 +59,20 @@ export default function RightOffCanvas({
 	dbcDataName,
 	dbcDataNameDetail,
 }) {
+	const { dbc } = useData();
 	const [selectedDBC, setSelectedDBC] = useState([]);
 	const [draggableDBC, setDraggableDBC] = useState(dbcDataName);
 	const [filteredDraggableDBC, setFilteredDraggableDBC] = useState(dbcDataName);
 	const [search, setSearch] = useState("");
+	let initialChosedData = {};
+	dbc["params"].forEach((e) => {
+		let names = e["signals"].map((ele) => ele["name"]);
+		names.forEach((name) => {
+			initialChosedData[name] = false;
+		});
+	});
+	const [chosedData, setChosedData] = useState(initialChosedData);
+
 	function onDragEnd(res) {
 		if (!res.destination) return;
 		if (res.destination.droppableId !== res.source.droppableId) {
@@ -95,13 +106,20 @@ export default function RightOffCanvas({
 
 	function Select(e) {
 		let selectArray = draggableDBC.map((e) => e.name);
-		let idx = selectArray.indexOf(e.target.textContent);
+		let idx = selectArray.indexOf(e.target.id);
 		let newDraggableDBC = Array.from(draggableDBC);
 		let newSelectedDBC = Array.from(selectedDBC);
 		const [reorderedItem] = newDraggableDBC.splice(idx, 1);
 		newSelectedDBC.splice(0, 0, reorderedItem);
 		setDraggableDBC(newDraggableDBC);
 		setSelectedDBC(newSelectedDBC);
+		dbcDataNameDetail[e.target.id].forEach((e) =>
+			setChosedData((init) => {
+				let copy = Object.assign({}, init);
+				copy[e] = true;
+				return copy;
+			})
+		);
 	}
 
 	useEffect(() => {
@@ -118,7 +136,10 @@ export default function RightOffCanvas({
 
 	return (
 		<OffCanvas show={rightShow} onHide={handleRightClose} placement="end">
-			<OffCanvas.Header closeButton>
+			<OffCanvas.Header
+				closeButton
+				style={{ borderBottom: "1px solid #d1d1d1" }}
+			>
 				<OffCanvas.Title>Edit Dashboard</OffCanvas.Title>
 			</OffCanvas.Header>
 			<StyledOffcanvasBody
@@ -159,14 +180,17 @@ export default function RightOffCanvas({
 														<ListItem
 															ref={provided.innerRef}
 															{...provided.draggableProps}
+															id={item.name}
 															{...provided.dragHandleProps}
 														>
 															{item.name}
 															{dbcDataNameDetail[item.name].map((e) => (
 																<ListItemItem
+																	key={e}
 																	display={true}
 																	name={e}
-																	checked={true}
+																	checked={chosedData[e]}
+																	setChosedData={setChosedData}
 																/>
 															))}
 														</ListItem>
@@ -238,8 +262,18 @@ export default function RightOffCanvas({
 																		{...provided.draggableProps}
 																		{...provided.dragHandleProps}
 																		onClick={Select}
+																		id={item.name}
 																	>
 																		{item.name}
+																		{dbcDataNameDetail[item.name].map((e) => (
+																			<ListItemItem
+																				key={e}
+																				display={search}
+																				name={e}
+																				checked={chosedData[e]}
+																				setChosedData={setChosedData}
+																			/>
+																		))}
 																	</ListItem>
 																)}
 															</Draggable>

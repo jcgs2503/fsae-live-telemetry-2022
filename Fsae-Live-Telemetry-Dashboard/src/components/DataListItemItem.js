@@ -25,12 +25,27 @@ const Check = styled.input`
 	top: 3px;
 `;
 
-export default function DataListItemItem({ display, name, checked }) {
+export default function DataListItemItem({
+	display,
+	name,
+	checked,
+	setChosedData,
+}) {
 	if (display) {
 		return (
 			<ListItemItem>
 				{name}
-				<Check type="checkbox" checked={checked} />
+				<Check
+					type="checkbox"
+					checked={checked}
+					onChange={() => {
+						setChosedData((init) => {
+							let copy = Object.assign({}, init);
+							copy[name] = !copy[name];
+							return copy;
+						});
+					}}
+				/>
 			</ListItemItem>
 		);
 	} else {

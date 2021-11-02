@@ -2,6 +2,23 @@ import React from "react";
 import styled from "@emotion/styled";
 import Form from "react-bootstrap/Form";
 
+const NewListItem = styled.button`
+	width: 100%;
+	height: fit-content;
+	background-color: transparent;
+	border: none;
+	text-decoration: none;
+	border-bottom: 1px solid #d1d1d1;
+	padding-left: 20px;
+	padding-right: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	padding-top: 8px;
+	padding-bottom: 8px;
+`;
+
 const ListItem = styled.button`
 	width: 100%;
 	height: fit-content;
@@ -70,7 +87,7 @@ export default function DataListItem({
 		);
 	} else if (createNew) {
 		return (
-			<ListItem>
+			<NewListItem>
 				<Form.Control
 					type="text"
 					placeholder="Start New Test"
@@ -82,7 +99,7 @@ export default function DataListItem({
 						marginBottom: "10px",
 					}}
 				/>
-			</ListItem>
+			</NewListItem>
 		);
 	} else {
 		return (
