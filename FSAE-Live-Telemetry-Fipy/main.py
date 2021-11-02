@@ -1,10 +1,11 @@
 from network import LTE
 from network import WLAN
 import machine
+from machine import CAN
 import time
 import socket
+import gc
 from lib import *
-
 """
 If you want to connect to LTE with fipy, uncomment the connectLTE() function.
 """
@@ -30,9 +31,27 @@ If you want to connect to LTE with fipy, uncomment the connectLTE() function.
 #         end = time.time()
 #         print("took {}".format(end - now))
 
+output = []
+firebase.setURL("https://fsae-live-telemetry-default-rtdb.firebaseio.com/")
 
+def can_cb(can_o):
+    gc.collect()
+    if(gc.mem_free()<1000):
+        output.pop(0)
+        output.append(can_o.recv())
+    else:
+        output.append(can_o.recv())
 
 # test_with_wifi(wifi_name,wifi_password,"teststruct/test-3")
 
-can = init_can()
+can = CAN(0, mode=CAN.NORMAL, baudrate=1000000, pins=('P22', 'P23'))
+can_filter_out(can,[0x100,0x610])
 can.callback(handler=can_cb, trigger=CAN.RX_FRAME)
+id = 0;
+while(1):
+    if id<10:
+        firebase.patch(db_name,{"tag 0{}".format(id): {"id":id,"data":output}}, bg = False )
+    else:
+        firebase.patch(db_name,{"tag {}".format(id): {"id":id,"data":output}}, bg = False )
+    ouptut = []
+    id += 1
