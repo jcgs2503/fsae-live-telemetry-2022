@@ -40,7 +40,21 @@ const Logo = styled.img`
 const ChartStyle = styled.div`
 	margin-top: 60px;
 	color: white;
-	margin-left: 30px;
+`;
+
+const Charts = styled.div`
+	/* display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between; */
+	padding-left: 40px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+`;
+
+const CurrentData = styled.div`
+	float: right;
+	margin-right: 15%;
+	margin-top: 10px;
 `;
 
 export default function Dashboard() {
@@ -104,16 +118,14 @@ export default function Dashboard() {
 			id: `${idx}`,
 		}))
 		.sort(function (a, b) {
-			var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-			var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+			var nameA = a.name.toUpperCase();
+			var nameB = b.name.toUpperCase();
 			if (nameA < nameB) {
 				return -1;
 			}
 			if (nameA > nameB) {
 				return 1;
 			}
-
-			// names must be equal
 			return 0;
 		});
 	let dbcDataNameDetail = [];
@@ -153,44 +165,51 @@ export default function Dashboard() {
 					<AddRoundedIcon />
 				</Button>
 			</Navbar>
-			<ChartStyle>
-				<Button
-					onClick={addData}
-					variant="outline-light"
-					style={{ marginBottom: "20px" }}
-				>
-					<AddRoundedIcon />
-				</Button>
-				<div style={{ float: "right", marginRight: "57%", marginTop: "10px" }}>
-					{
-						metaData[selectedData].data[metaData[selectedData].data.length - 1]
-							.price
-					}
-				</div>
-				<Chart
-					data_json={metaData[selectedData].data}
-					label={metaData[selectedData].name}
-				></Chart>
-			</ChartStyle>
-			<ChartStyle>
-				<Button
-					onClick={addData}
-					variant="outline-light"
-					style={{ marginBottom: "20px" }}
-				>
-					<AddRoundedIcon />
-				</Button>
-				<div style={{ float: "right", marginRight: "57%", marginTop: "10px" }}>
-					{
-						metaData[selectedData].data[metaData[selectedData].data.length - 1]
-							.price
-					}
-				</div>
-				<Chart
-					data_json={metaData[selectedData].data}
-					label={metaData[selectedData].name}
-				></Chart>
-			</ChartStyle>
+			<Charts>
+				<ChartStyle>
+					<Button
+						onClick={addData}
+						variant="outline-light"
+						style={{ marginBottom: "20px" }}
+					>
+						<AddRoundedIcon />
+					</Button>
+					<CurrentData>
+						{
+							metaData[selectedData].data[
+								metaData[selectedData].data.length - 1
+							].price
+						}
+					</CurrentData>
+
+					<Chart
+						data_json={metaData[selectedData].data}
+						label={metaData[selectedData].name}
+					></Chart>
+				</ChartStyle>
+				<ChartStyle>
+					<Button
+						onClick={addData}
+						variant="outline-light"
+						style={{ marginBottom: "20px" }}
+					>
+						<AddRoundedIcon />
+					</Button>
+					<CurrentData>
+						{
+							metaData[selectedData].data[
+								metaData[selectedData].data.length - 1
+							].price
+						}
+					</CurrentData>
+
+					<Chart
+						data_json={metaData[selectedData].data}
+						label={metaData[selectedData].name}
+					></Chart>
+				</ChartStyle>
+			</Charts>
+
 			<LeftOffCanvas
 				show={show}
 				handleClose={handleClose}

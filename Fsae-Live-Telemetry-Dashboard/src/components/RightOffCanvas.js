@@ -25,8 +25,8 @@ const ListItem = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	padding-top: 13px;
-	padding-bottom: 13px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 	border: 1px #dbdbdb solid;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 	margin-top: 10px;
@@ -46,10 +46,11 @@ const ListItemName = styled.div`
 
 const StyledArrow = styled(KeyboardArrowDownRoundedIcon)`
 	border-radius: 50%;
-	width: 30px;
-	height: 30px;
+	width: 35px;
+	height: 35px;
+	padding: 5px;
 	:hover {
-		cursor: pointer;
+		cursor: default;
 		background-color: #d9d9d9;
 	}
 `;
@@ -104,6 +105,13 @@ export default function RightOffCanvas({
 				let newSelectedDBC = Array.from(selectedDBC);
 				const [reorderedItem] = newDraggableDBC.splice(res.source.index, 1);
 				newSelectedDBC.splice(res.destination.index, 0, reorderedItem);
+				dbcDataNameDetail[res.draggableId].forEach((e) =>
+					setChosedData((init) => {
+						let copy = Object.assign({}, init);
+						copy[e] = true;
+						return copy;
+					})
+				);
 				setDraggableDBC(newDraggableDBC);
 				setSelectedDBC(newSelectedDBC);
 			} else {
@@ -159,8 +167,13 @@ export default function RightOffCanvas({
 		);
 	}, [search]);
 
+	function handleClose() {
+		handleRightClose();
+		setSearch("");
+	}
+
 	return (
-		<OffCanvas show={rightShow} onHide={handleRightClose} placement="end">
+		<OffCanvas show={rightShow} onHide={handleClose} placement="end">
 			<OffCanvas.Header
 				closeButton
 				style={{ borderBottom: "1px solid #d1d1d1" }}
@@ -198,7 +211,7 @@ export default function RightOffCanvas({
 												<Draggable
 													// adding a key is important!
 													key={`${item.name}-${item.id}`}
-													draggableId={`${item.name}-${item.id}`}
+													draggableId={`${item.name}`}
 													index={index}
 												>
 													{(provided, snapshot) => (
@@ -278,16 +291,14 @@ export default function RightOffCanvas({
 										>
 											{draggableDBC
 												.sort(function (a, b) {
-													var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-													var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+													var nameA = a.name.toUpperCase();
+													var nameB = b.name.toUpperCase();
 													if (nameA < nameB) {
 														return -1;
 													}
 													if (nameA > nameB) {
 														return 1;
 													}
-
-													// names must be equal
 													return 0;
 												})
 												.map(
@@ -296,7 +307,7 @@ export default function RightOffCanvas({
 															<Draggable
 																// adding a key is important!
 																key={`${item.name}-${item.id}`}
-																draggableId={`${item.name}-${item.id}`}
+																draggableId={`${item.name}`}
 																index={index}
 															>
 																{(provided, snapshot) => (
