@@ -30,22 +30,25 @@ export default function DataListItemItem({
 	name,
 	checked,
 	setChosedData,
+	checkedDisplay,
 }) {
 	if (display) {
 		return (
 			<ListItemItem>
 				{name}
-				<Check
-					type="checkbox"
-					checked={checked}
-					onChange={() => {
-						setChosedData((init) => {
-							let copy = Object.assign({}, init);
-							copy[name] = !copy[name];
-							return copy;
-						});
-					}}
-				/>
+				{checkedDisplay && (
+					<Check
+						type="checkbox"
+						checked={checked}
+						onChange={() => {
+							setChosedData((init) => {
+								let copy = Object.assign({}, init);
+								copy[name] = !copy[name];
+								return copy;
+							});
+						}}
+					/>
+				)}
 			</ListItemItem>
 		);
 	} else {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import OffCanvas from "react-bootstrap/Offcanvas";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -35,6 +36,24 @@ const ListItem = styled.div`
 	}
 `;
 
+const ListItemName = styled.div`
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0px 20px;
+`;
+
+const StyledArrow = styled(KeyboardArrowDownRoundedIcon)`
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	:hover {
+		cursor: pointer;
+		background-color: #d9d9d9;
+	}
+`;
+
 const EditTitle = styled.div`
 	padding-left: 18px;
 	padding-right: 18px;
@@ -65,13 +84,17 @@ export default function RightOffCanvas({
 	const [filteredDraggableDBC, setFilteredDraggableDBC] = useState(dbcDataName);
 	const [search, setSearch] = useState("");
 	let initialChosedData = {};
+	let initialDropDown = {};
 	dbc["params"].forEach((e) => {
 		let names = e["signals"].map((ele) => ele["name"]);
 		names.forEach((name) => {
 			initialChosedData[name] = false;
 		});
+		initialDropDown[e["name"]] = false;
 	});
 	const [chosedData, setChosedData] = useState(initialChosedData);
+	const [dropDown, setDropDown] = useState(initialDropDown);
+	const [disableChoose, setDisableChoose] = useState(false);
 
 	function onDragEnd(res) {
 		if (!res.destination) return;
@@ -105,21 +128,23 @@ export default function RightOffCanvas({
 	}
 
 	function Select(e) {
-		let selectArray = draggableDBC.map((e) => e.name);
-		let idx = selectArray.indexOf(e.target.id);
-		let newDraggableDBC = Array.from(draggableDBC);
-		let newSelectedDBC = Array.from(selectedDBC);
-		const [reorderedItem] = newDraggableDBC.splice(idx, 1);
-		newSelectedDBC.splice(0, 0, reorderedItem);
-		setDraggableDBC(newDraggableDBC);
-		setSelectedDBC(newSelectedDBC);
-		dbcDataNameDetail[e.target.id].forEach((e) =>
-			setChosedData((init) => {
-				let copy = Object.assign({}, init);
-				copy[e] = true;
-				return copy;
-			})
-		);
+		if (!disableChoose) {
+			let selectArray = draggableDBC.map((e) => e.name);
+			let idx = selectArray.indexOf(e.target.id);
+			let newDraggableDBC = Array.from(draggableDBC);
+			let newSelectedDBC = Array.from(selectedDBC);
+			const [reorderedItem] = newDraggableDBC.splice(idx, 1);
+			newSelectedDBC.splice(0, 0, reorderedItem);
+			setDraggableDBC(newDraggableDBC);
+			setSelectedDBC(newSelectedDBC);
+			dbcDataNameDetail[e.target.id].forEach((e) =>
+				setChosedData((init) => {
+					let copy = Object.assign({}, init);
+					copy[e] = true;
+					return copy;
+				})
+			);
+		}
 	}
 
 	useEffect(() => {
@@ -183,14 +208,32 @@ export default function RightOffCanvas({
 															id={item.name}
 															{...provided.dragHandleProps}
 														>
-															{item.name}
+															<ListItemName id={item.name}>
+																{item.name}
+																<StyledArrow
+																	onClick={() => {
+																		setDropDown((init) => {
+																			let copy = Object.assign({}, init);
+																			copy[item.name] = !copy[item.name];
+																			return copy;
+																		});
+																	}}
+																	onMouseEnter={() => {
+																		setDisableChoose(true);
+																	}}
+																	onMouseLeave={() => {
+																		setDisableChoose(false);
+																	}}
+																/>
+															</ListItemName>
 															{dbcDataNameDetail[item.name].map((e) => (
 																<ListItemItem
 																	key={e}
-																	display={true}
+																	display={dropDown[item.name]}
 																	name={e}
 																	checked={chosedData[e]}
 																	setChosedData={setChosedData}
+																	checkedDisplay={true}
 																/>
 															))}
 														</ListItem>
@@ -264,11 +307,29 @@ export default function RightOffCanvas({
 																		onClick={Select}
 																		id={item.name}
 																	>
-																		{item.name}
+																		<ListItemName id={item.name}>
+																			{item.name}
+																			<StyledArrow
+																				onClick={() => {
+																					setDropDown((init) => {
+																						let copy = Object.assign({}, init);
+																						copy[item.name] = !copy[item.name];
+																						return copy;
+																					});
+																				}}
+																				onMouseEnter={() => {
+																					setDisableChoose(true);
+																				}}
+																				onMouseLeave={() => {
+																					setDisableChoose(false);
+																				}}
+																			/>
+																		</ListItemName>
 																		{dbcDataNameDetail[item.name].map((e) => (
 																			<ListItemItem
 																				key={e}
-																				display={search}
+																				display={dropDown[item.name] || search}
+																				checkedDisplay={false}
 																				name={e}
 																				checked={chosedData[e]}
 																				setChosedData={setChosedData}

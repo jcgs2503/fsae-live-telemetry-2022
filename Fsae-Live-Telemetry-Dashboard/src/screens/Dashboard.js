@@ -128,6 +128,18 @@ export default function Dashboard() {
 	const handleRightShow = () => setRightShow(true);
 	const handleRightClose = () => setRightShow(false);
 
+	function addData() {
+		setI(i + 1);
+		setMetaData((prev) => {
+			let prevCopy = [...prev];
+			prevCopy[selectedData].data.push({
+				date: parseDate(`10/${i}/2021`),
+				price: Number(Math.floor(Math.random() * 100)),
+			});
+			return prevCopy;
+		});
+	}
+
 	return (
 		<Page>
 			<Navbar>
@@ -143,17 +155,26 @@ export default function Dashboard() {
 			</Navbar>
 			<ChartStyle>
 				<Button
-					onClick={() => {
-						setI(i + 1);
-						setMetaData((prev) => {
-							let prevCopy = [...prev];
-							prevCopy[selectedData].data.push({
-								date: parseDate(`10/${i}/2021`),
-								price: Number(Math.floor(Math.random() * 100)),
-							});
-							return prevCopy;
-						});
-					}}
+					onClick={addData}
+					variant="outline-light"
+					style={{ marginBottom: "20px" }}
+				>
+					<AddRoundedIcon />
+				</Button>
+				<div style={{ float: "right", marginRight: "57%", marginTop: "10px" }}>
+					{
+						metaData[selectedData].data[metaData[selectedData].data.length - 1]
+							.price
+					}
+				</div>
+				<Chart
+					data_json={metaData[selectedData].data}
+					label={metaData[selectedData].name}
+				></Chart>
+			</ChartStyle>
+			<ChartStyle>
+				<Button
+					onClick={addData}
 					variant="outline-light"
 					style={{ marginBottom: "20px" }}
 				>
