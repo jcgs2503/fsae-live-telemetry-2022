@@ -6,13 +6,14 @@ import time
 import socket
 import gc
 from lib import *
+import binascii
 """
 If you want to connect to LTE with fipy, uncomment the connectLTE() function.
 """
 # connectLTE()
 #
-# wifi_name = "帥杰"
-# wifi_password = "00000000"
+wifi_name = "帥杰"
+wifi_password = "00000000"
 #
 #
 # def test_with_wifi(wifi_name,wifi_password,db_name,max_thread=2):
@@ -31,27 +32,33 @@ If you want to connect to LTE with fipy, uncomment the connectLTE() function.
 #         end = time.time()
 #         print("took {}".format(end - now))
 
-output = []
+connectWiFi(wifi_name,wifi_password)
 firebase.setURL("https://fsae-live-telemetry-default-rtdb.firebaseio.com/")
+
+output = []
 
 def can_cb(can_o):
     gc.collect()
     if(gc.mem_free()<1000):
         output.pop(0)
-        output.append(can_o.recv())
+        output.append({"id":can_o.recv()[0],"data":binascii.hexlify(can_o.recv()[1])})
     else:
-        output.append(can_o.recv())
+        output.append({"id":can_o.recv()[0],"data":binascii.hexlify(can_o.recv()[1])})
+
 
 # test_with_wifi(wifi_name,wifi_password,"teststruct/test-3")
 
+
 can = CAN(0, mode=CAN.NORMAL, baudrate=1000000, pins=('P22', 'P23'))
-can_filter_out(can,[0x100,0x610])
+can_filter_out(can, [0x100, 0x610])
 can.callback(handler=can_cb, trigger=CAN.RX_FRAME)
-id = 0;
+id = 0
+
 while(1):
     if id<10:
-        firebase.patch(db_name,{"tag 0{}".format(id): {"id":id,"data":output}}, bg = False )
+        firebase.patch("On Car Test/test-1",{"tag 0{}".format(id): {"id":id,"data":output}}, bg = False )
     else:
-        firebase.patch(db_name,{"tag {}".format(id): {"id":id,"data":output}}, bg = False )
+        firebase.patch("On Car Test/test-1",{"tag {}".format(id): {"id":id,"data":output}}, bg = False )
     ouptut = []
     id += 1
+    time.sleep(0.5)

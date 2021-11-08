@@ -22,11 +22,9 @@ def can_filter_out(can_o,list):
     for i in ACCEPTED_IDS_LIST:
         if i not in list:
             filtered_list.append(i)
-    can_o.soft_filter(CAN.FILTER_LIST, filtered_list) 
+    can_o.soft_filter(CAN.FILTER_LIST, filtered_list)
 
-#
-def can_cb(can_o):
-    print(can_o.recv())
+
 
 def can_request(can_o,id):
     return can.send(id=id,rtr=True)
