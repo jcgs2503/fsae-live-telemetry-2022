@@ -5,17 +5,24 @@
 
 .wrapper {
 	/* width: 550px; */
-	padding-left: 5%;
+
 	/* font-size: 16px;
 	color: #666;
 	margin: auto;
   	width: 50%;
-	  margin-bottom: 10px;
+	margin-bottom: 10px;
   	padding: 10px; */
+	width:auto;
+
+
 }
 
+
 svg {
-	overflow: visible;
+	
+	/* display: flex; */
+	
+	/* flex-direction: row-reverse; */
 }
 
 text {

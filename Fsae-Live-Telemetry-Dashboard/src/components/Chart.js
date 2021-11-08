@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import "../index.css";
 
 export default function Chart(props) {
-	const margin = { top: 40, right: 80, bottom: 60, left: 50 },
+	const margin = { top: 40, right: 0, bottom: 60, left: 0 },
 		width = 960 - margin.left - margin.right,
 		height = 280 - margin.top - margin.bottom,
 		color = "OrangeRed";
@@ -21,7 +21,7 @@ export default function Chart(props) {
 	const getX = d3
 		.scaleTime()
 		.domain(d3.extent(props.data_json, (d) => d.date))
-		.range([0, width]);
+		.range([0, props.data_json.length * 30]);
 
 	const getY = d3
 		.scaleLinear()
@@ -30,7 +30,7 @@ export default function Chart(props) {
 
 	const getXAxis = (ref) => {
 		const xAxis = d3.axisBottom(getX);
-		d3.select(ref).call(xAxis.tickFormat(d3.timeFormat("%b")));
+		d3.select(ref).call(xAxis.tickFormat(d3.timeFormat("%M:%S")));
 	};
 
 	const getYAxis = (ref) => {
@@ -69,6 +69,7 @@ export default function Chart(props) {
 							${height + margin.top + margin.bottom}`}
 				onMouseMove={handleMouseMove}
 				onMouseLeave={handleMouseLeave}
+				style={{overflowX: "scroll", overflowY: "auto"}}
 			>
 				// x- and y-axes
 				<g className="axis" ref={getYAxis} />
