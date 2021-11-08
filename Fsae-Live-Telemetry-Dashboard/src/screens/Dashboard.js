@@ -58,8 +58,10 @@ const CurrentData = styled.div`
 `;
 
 export default function Dashboard() {
+	const { dataGroupList, currentData, dbc } = useData();
 	const [show, setShow] = useState(false);
 	const [rightShow, setRightShow] = useState(false);
+	const [dataGroup, setDataGroup] = useState(dataGroupList[0]);
 	const [selectedData, setSelectedData] = useState(0);
 	const parseDate = d3.timeParse("%m/%d/%Y");
 	const [i, setI] = useState(17);
@@ -111,7 +113,6 @@ export default function Dashboard() {
 	}, [selectedData]);
 
 	const [metaData, setMetaData] = useState(initialMetaData.reverse());
-	const { dbc } = useData();
 	const dbcDataName = dbc["params"]
 		.map((e, idx) => ({
 			name: e["name"],
@@ -216,6 +217,9 @@ export default function Dashboard() {
 				metaData={metaData}
 				selectedData={selectedData}
 				setSelectedData={setSelectedData}
+				setDataGroup={setDataGroup}
+				dataGroup={dataGroup}
+				currentData={currentData}
 			/>
 
 			<RightOffCanvas

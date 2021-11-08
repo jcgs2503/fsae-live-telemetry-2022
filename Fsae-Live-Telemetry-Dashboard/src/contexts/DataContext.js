@@ -25,6 +25,7 @@ export function DataProvider({ children }) {
 	const value = {
 		currentData,
 		dbc,
+		dataGroupList,
 	};
 
 	return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

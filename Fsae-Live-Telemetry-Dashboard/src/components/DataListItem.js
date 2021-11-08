@@ -71,8 +71,6 @@ export default function DataListItem({
 	createdTime,
 	createNew,
 	setSelectedData,
-	data,
-	setData,
 	id,
 }) {
 	if (active) {
@@ -80,7 +78,13 @@ export default function DataListItem({
 			<ListItemActive>
 				<div>
 					<div>{name}</div>
-					<ListItemCreatedTimeActive>{createdTime}</ListItemCreatedTimeActive>
+					{createdTime ? (
+						<ListItemCreatedTimeActive>{createdTime}</ListItemCreatedTimeActive>
+					) : (
+						<ListItemCreatedTimeActive>
+							No Created Time
+						</ListItemCreatedTimeActive>
+					)}
 				</div>
 				<div style={{ fontSize: "15px" }}>Current View</div>
 			</ListItemActive>
@@ -110,8 +114,11 @@ export default function DataListItem({
 			>
 				<>
 					<div>{name}</div>
-
-					<ListItemCreatedTime>{createdTime}</ListItemCreatedTime>
+					{createdTime ? (
+						<ListItemCreatedTime>{createdTime}</ListItemCreatedTime>
+					) : (
+						<ListItemCreatedTime>No Created Time</ListItemCreatedTime>
+					)}
 				</>
 			</ListItem>
 		);
