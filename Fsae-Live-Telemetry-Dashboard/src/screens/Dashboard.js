@@ -40,13 +40,14 @@ const Logo = styled.img`
 const ChartStyle = styled.div`
 	margin-top: 60px;
 	color: white;
+
 `;
 
 const Charts = styled.div`
 	/* display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between; */
-	padding-left: 40px;
+	padding-left: 0px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 `;
@@ -63,53 +64,53 @@ export default function Dashboard() {
 	const [rightShow, setRightShow] = useState(false);
 	const [dataGroup, setDataGroup] = useState(dataGroupList[0]);
 	const [selectedData, setSelectedData] = useState(0);
-	const parseDate = d3.timeParse("%m/%d/%Y");
-	const [i, setI] = useState(17);
+	const parseTime = d3.timeParse("%M:%S");
+	const [i, setI] = useState(36);
 
 	let initialMetaData = [
 		{
 			name: "test #1",
 			createdTime: "2021/10/20 20:08:25",
 			data: [
-				{ date: "10/12/2021", price: "20" },
-				{ date: "10/13/2021", price: "5" },
-				{ date: "10/14/2021", price: "8" },
-				{ date: "10/15/2021", price: "10" },
-				{ date: "10/16/2021", price: "10" },
+				{ date: "12:32", price: "20" },
+				{ date: "12:33", price: "5" },
+				{ date: "12:36", price: "8" },
+				{ date: "12:39", price: "10" },
+				{ date: "12:42", price: "10" },
 			],
 		},
 		{
 			name: "test #2",
 			createdTime: "2021/10/22 16:25:36",
 			data: [
-				{ date: "10/12/2021", price: "10" },
-				{ date: "10/13/2021", price: "5" },
-				{ date: "10/14/2021", price: "20" },
-				{ date: "10/15/2021", price: "5" },
-				{ date: "10/16/2021", price: "10" },
+				{ date: "12:32", price: "10" },
+				{ date: "12:34", price: "5" },
+				{ date: "12:37", price: "20" },
+				{ date: "12:39", price: "5" },
+				{ date: "12:42", price: "10" },
 			],
 		},
 		{
 			name: "test #3",
 			createdTime: "2021/10/25 08:46:44",
 			data: [
-				{ date: "10/12/2021", price: "6" },
-				{ date: "10/13/2021", price: "15" },
-				{ date: "10/14/2021", price: "150" },
-				{ date: "10/15/2021", price: "1" },
-				{ date: "10/16/2021", price: "100" },
+				{ date: "12:31", price: "6" },
+				{ date: "12:33", price: "15" },
+				{ date: "12:34", price: "150" },
+				{ date: "12:35", price: "1" },
+				{ date: "12:36", price: "100" },
 			],
 		},
 	];
 	initialMetaData.forEach((d) => {
 		d.data.forEach((i) => {
-			i.date = parseDate(i.date);
+			i.date = parseTime(i.date);
 			i.price = Number(i.price);
 		});
 	});
 
 	useEffect(() => {
-		setI(17);
+		setI(37);
 	}, [selectedData]);
 
 	const [metaData, setMetaData] = useState(initialMetaData.reverse());
@@ -146,7 +147,7 @@ export default function Dashboard() {
 		setMetaData((prev) => {
 			let prevCopy = [...prev];
 			prevCopy[selectedData].data.push({
-				date: parseDate(`10/${i}/2021`),
+				date: parseTime(`12:${i}`),
 				price: Number(Math.floor(Math.random() * 100)),
 			});
 			return prevCopy;
@@ -167,7 +168,7 @@ export default function Dashboard() {
 				</Button>
 			</Navbar>
 			<Charts>
-				<ChartStyle>
+				<ChartStyle >
 					<Button
 						onClick={addData}
 						variant="outline-light"
