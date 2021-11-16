@@ -143,6 +143,7 @@ export default function Dashboard() {
 	const handleRightClose = () => setRightShow(false);
 
 	function addData() {
+		console.log(i + " " + parseTime(`12:${i}`));
 		setI(i + 1);
 		setMetaData((prev) => {
 			let prevCopy = [...prev];
@@ -167,8 +168,8 @@ export default function Dashboard() {
 					<AddRoundedIcon />
 				</Button>
 			</Navbar>
-			<Charts>
-				<ChartStyle >
+			{/* <Charts> */}
+				{/* <ChartStyle >
 					<Button
 						onClick={addData}
 						variant="outline-light"
@@ -188,7 +189,7 @@ export default function Dashboard() {
 						data_json={metaData[selectedData].data}
 						label={metaData[selectedData].name}
 					></Chart>
-				</ChartStyle>
+				</ChartStyle> */}
 				<ChartStyle>
 					<Button
 						onClick={addData}
@@ -205,12 +206,18 @@ export default function Dashboard() {
 						}
 					</CurrentData>
 
-					<Chart
+					
+
+				</ChartStyle>
+			{/* </Charts> */}
+
+			<Chart
 						data_json={metaData[selectedData].data}
 						label={metaData[selectedData].name}
 					></Chart>
-				</ChartStyle>
-			</Charts>
+
+
+			
 
 			<LeftOffCanvas
 				show={show}
