@@ -103,20 +103,13 @@ export default function Chart(props) {
 		// 
 		<div >
 			<svg
-			viewBox={`${margin.left+ margin.right+170} 0 ${width + margin.left + margin.right} // change the dimensions IT IS HARD_CODED right now
+			viewBox={`${margin.left+ margin.right+200} 0 ${width + margin.left + margin.right} 
 			${height + margin.top + margin.bottom}`}
 			style={{height : height, position: "absolute", zIndex:"1",minHeight:height, maxHeight:height, width:width}}
 		
 			>
 			<g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} />
-			<text
-					transform={"rotate(-90)"}
-					x={0 - height / 2}
-					y={0}
-					dy="1em"
-				>
-					{"y axis"}
-				</text>
+			
 			
 
 			</svg>
