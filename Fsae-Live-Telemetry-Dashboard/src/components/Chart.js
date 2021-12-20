@@ -6,8 +6,8 @@ import * as d3 from "d3";
 import "../index.css";
 
 export default function Chart(props) {
-	const margin = { top: 40, right: 0, bottom: 60, left: 0 },
-		width = 960 - margin.left - margin.right,
+	const margin = { top: 40, right: 40, bottom: 60, left: 60 },
+		width = 1300 - margin.left - margin.right,
 		height = 280 - margin.top - margin.bottom,
 		color = "OrangeRed";
 
@@ -18,10 +18,18 @@ export default function Chart(props) {
 	const yMinValue = d3.min(props.data_json, (d) => d.price),
 		yMaxValue = d3.max(props.data_json, (d) => d.price);
 
+
+		
+		const overwidth = (width<props.data_json.length * 20+ margin.left + margin.right)? props.data_json.length * 100+ margin.left + margin.right: width;
+		console.log(overwidth);
+		console.log(width);
+
+		
+
 	const getX = d3
 		.scaleTime()
 		.domain(d3.extent(props.data_json, (d) => d.date))
-		.range([0, props.data_json.length * 30]);
+		.range([margin.left, overwidth + margin.right]);
 
 	const getY = d3
 		.scaleLinear()
@@ -31,15 +39,18 @@ export default function Chart(props) {
 	const getXAxis = (ref) => {
 		const xAxis = d3.axisBottom(getX);
 		d3.select(ref).call(xAxis.tickFormat(d3.timeFormat("%M:%S")));
+
+
+		
 	};
 
 	const getYAxis = (ref) => {
-		const yAxis = d3.axisLeft(getY).tickSize(-width).tickPadding(7);
+		const yAxis = d3.axisLeft(getY).tickSize(-overwidth).tickPadding(7);
 		d3.select(ref).call(yAxis);
 	};
 
 	const linePath = d3
-		.line()
+		.line(d3.curveStep)
 		.x((d) => getX(d.date))
 		.y((d) => getY(d.price))
 		.curve(d3.curveMonotoneX)(props.data_json);
@@ -62,44 +73,70 @@ export default function Chart(props) {
 		setActiveIndex(null);
 	};
 
+
+
+	// const parent = d3.create("div");
+
+	// parent.append("svg")
+	// 	.attr("width", width)
+	// 	.attr("height", height)
+	// 	.style("position", "absolute")
+	// 	.style("pointer-events", "none")
+	// 	.style("z-index", 1)
+	// 	.call(svg => svg.append("g").call(getYAxis));
+  
+	// const body = parent.append("div")
+	// 	.style("overflow-x", "scroll")
+	// 	.style("-webkit-overflow-scrolling", "touch");
+  
+	// body.append("svg")
+	// 	.attr("width", overwidth)
+	// 	.attr("height", height)
+	// 	.style("display", "block")
+	// 	.call(svg => svg.append("g").ref(linePath) )
+	  	
+
+//   // Initialize the scroll offset after yielding the chart to the DOM.
+//   body.node().scrollBy(overwidth, 0);
+
 	return (
-		<div className="wrapper">
+		// 
+		<div >
 			<svg
-				viewBox={`0 0 ${width + margin.left + margin.right} 
+			viewBox={`${margin.left+ margin.right+200} 0 ${width + margin.left + margin.right} 
+			${height + margin.top + margin.bottom}`}
+			style={{height : height, position: "absolute", zIndex:"1",minHeight:height, maxHeight:height, width:width}}
+		
+			>
+			<g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} />
+			
+			
+
+			</svg>
+
+
+		<div style={{width:width, height : height, position: "absolute", zIndex:"2", pointerEvents:"auto",overflowX:"scroll", flexDirection: "row-reverse", overflowAnchor:"auto"}}>
+
+			<svg
+			
+			height={height}
+				viewBox={`0 0 ${overwidth + margin.left + margin.right} 
 							${height + margin.top + margin.bottom}`}
 				onMouseMove={handleMouseMove}
 				onMouseLeave={handleMouseLeave}
-				style={{overflowX: "scroll", overflowY: "auto"}}
+				style={{minHeight:height, maxHeight:height, width:"fit-content"}}
+				
 			>
-				// x- and y-axes
-				<g className="axis" ref={getYAxis} />
+			
+				{/* <g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} /> */}
 				<g
 					className="axis xAxis"
 					ref={getXAxis}
-					transform={`translate(0,${height})`}
+					transform={`translate(${0},${height})`}
 				/>
 				// area and line paths
 				<path fill={color} d={areaPath} opacity={0.3} />
 				<path strokeWidth={3} fill="none" stroke={color} d={linePath} />
-				// y-axis label
-				<text
-					transform={"rotate(-90)"}
-					x={0 - height / 2}
-					y={0 - margin.left}
-					dy="1em"
-				>
-					{"y axis"}
-				</text>
-				// chart title
-				<text x={width / 2} y={0 - margin.top / 2} text-anchor="middle">
-					{props.label}
-				</text>
-				// chart subtitle
-				<a className="subtitle" target="_blank">
-					<text x="0" y={height + 50}>
-						{"Test Graph"}
-					</text>
-				</a>
 				{props.data_json.map((item, index) => {
 					return (
 						<g key={index}>
@@ -125,7 +162,27 @@ export default function Chart(props) {
 						</g>
 					);
 				})}
+			
+				// x- and y-axes
+				
+				// y-axis label
+				
+				// chart title
+				<text x={width / 2} y={0 - margin.top / 2} text-anchor="middle">
+					{props.label}
+				</text>
+				// chart subtitle
+				<a className="subtitle" target="_blank">
+					<text x="0" y={height + 50}>
+						{"Test Graph"}
+					</text>
+				</a>
+				
 			</svg>
+
+			
+			
+		</div>
 		</div>
 	);
 }
