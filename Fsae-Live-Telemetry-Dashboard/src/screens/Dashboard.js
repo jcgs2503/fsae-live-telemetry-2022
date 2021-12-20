@@ -40,14 +40,13 @@ const Logo = styled.img`
 const ChartStyle = styled.div`
 	margin-top: 60px;
 	color: white;
-
 `;
 
 const Charts = styled.div`
 	/* display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between; */
-	padding-left: 0px;
+	padding-left: 30px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 `;
@@ -168,7 +167,7 @@ export default function Dashboard() {
 				</Button>
 			</Navbar>
 			<Charts>
-				<ChartStyle >
+				<ChartStyle>
 					<Button
 						onClick={addData}
 						variant="outline-light"
