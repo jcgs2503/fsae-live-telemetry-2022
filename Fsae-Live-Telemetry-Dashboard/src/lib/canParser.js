@@ -30,6 +30,7 @@ function canParser(id, hexString) {
 	signals.map((e) => {
 		if (e.isLittleEndian) {
 		} else {
+<<<<<<< HEAD
 			let result = inputData.slice(e.startBit, e.startBit + e.bitLength)
 			// problems
 			let slicedData = parseInt(result, 2)
@@ -54,6 +55,8 @@ function canParser(id, hexString) {
 				})
 			}
 
+=======
+>>>>>>> b423addea9c17c34be2615893b3b178b2900eabb
 		}
 	});
 	const output = {
