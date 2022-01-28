@@ -6,7 +6,6 @@ function canParser(id, hexString) {
 	signals.map((e) => {
 		if (e.isLittleEndian) {
 		} else {
-			console.log("test");
 		}
 	});
 }
