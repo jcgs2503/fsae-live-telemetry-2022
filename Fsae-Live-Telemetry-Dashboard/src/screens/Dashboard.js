@@ -167,13 +167,8 @@ export default function Dashboard() {
 					<AddRoundedIcon />
 				</Button>
 			</Navbar>
-<<<<<<< HEAD
-			<Charts>
-				<ChartStyle>
-=======
 			{/* <Charts> */}
 				{/* <ChartStyle >
->>>>>>> 220d0b0bffb1de1544366a02c871e270417d357e
 					<Button
 						onClick={addData}
 						variant="outline-light"

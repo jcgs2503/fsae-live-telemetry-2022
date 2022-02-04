@@ -13,15 +13,6 @@
   	width: 50%;
 	margin-bottom: 10px;
   	padding: 10px; */
-<<<<<<< HEAD
-	width: 90%;
-}
-
-svg {
-	/* display: flex; */
-
-	/* flex-direction: row-reverse; */
-=======
 	/* width:auto; */
 
 
@@ -42,7 +33,6 @@ svg {
 	/* background-color: aqua; */
 	width: fit-content;
 	
->>>>>>> 220d0b0bffb1de1544366a02c871e270417d357e
 }
 
 text {
