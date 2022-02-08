@@ -4,8 +4,7 @@
 }
 
 .wrapper {
-
-	position:absolute;
+	position: absolute;
 
 	/* font-size: 16px;
 	color: #666;
@@ -13,36 +12,21 @@
   	width: 50%;
 	margin-bottom: 10px;
   	padding: 10px; */
-<<<<<<< HEAD
-	width: 90%;
-}
-
-svg {
-	/* display: flex; */
-
-	/* flex-direction: row-reverse; */
-=======
 	/* width:auto; */
-
-
 }
 
-.scroll{
+.scroll {
 	min-width: 30;
 	max-width: 100;
 	overflow-x: auto;
 	background-color: aqua;
-	
 }
-
 
 svg {
 	display: flex;
 	flex-direction: row-reverse;
 	/* background-color: aqua; */
 	width: fit-content;
-	
->>>>>>> 220d0b0bffb1de1544366a02c871e270417d357e
 }
 
 text {

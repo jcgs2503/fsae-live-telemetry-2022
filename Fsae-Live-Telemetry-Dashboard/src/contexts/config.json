@@ -1262,7 +1262,7 @@
 					"isLittleEndian": true,
 					"isSigned": false,
 					"factor": 1,
-					"offset": 0,
+					"offset": 0,00
 					"dataType": "int",
 					"choking": false,
 					"visibility": true,

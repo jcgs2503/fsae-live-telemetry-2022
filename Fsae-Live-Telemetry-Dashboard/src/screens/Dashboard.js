@@ -167,13 +167,8 @@ export default function Dashboard() {
 					<AddRoundedIcon />
 				</Button>
 			</Navbar>
-<<<<<<< HEAD
-			<Charts>
-				<ChartStyle>
-=======
 			{/* <Charts> */}
-				{/* <ChartStyle >
->>>>>>> 220d0b0bffb1de1544366a02c871e270417d357e
+			{/* <ChartStyle >
 					<Button
 						onClick={addData}
 						variant="outline-light"
@@ -194,34 +189,27 @@ export default function Dashboard() {
 						label={metaData[selectedData].name}
 					></Chart>
 				</ChartStyle> */}
-				<ChartStyle>
-					<Button
-						onClick={addData}
-						variant="outline-light"
-						style={{ marginBottom: "20px" }}
-					>
-						<AddRoundedIcon />
-					</Button>
-					<CurrentData>
-						{
-							metaData[selectedData].data[
-								metaData[selectedData].data.length - 1
-							].price
-						}
-					</CurrentData>
-
-					
-
-				</ChartStyle>
+			<ChartStyle>
+				<Button
+					onClick={addData}
+					variant="outline-light"
+					style={{ marginBottom: "20px" }}
+				>
+					<AddRoundedIcon />
+				</Button>
+				<CurrentData>
+					{
+						metaData[selectedData].data[metaData[selectedData].data.length - 1]
+							.price
+					}
+				</CurrentData>
+			</ChartStyle>
 			{/* </Charts> */}
 
 			<Chart
-						data_json={metaData[selectedData].data}
-						label={metaData[selectedData].name}
-					></Chart>
-
-
-			
+				data_json={metaData[selectedData].data}
+				label={metaData[selectedData].name}
+			></Chart>
 
 			<LeftOffCanvas
 				show={show}

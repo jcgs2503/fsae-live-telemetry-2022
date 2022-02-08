@@ -18,13 +18,12 @@ export default function Chart(props) {
 	const yMinValue = d3.min(props.data_json, (d) => d.price),
 		yMaxValue = d3.max(props.data_json, (d) => d.price);
 
-
-		
-		const overwidth = (width<props.data_json.length * 20+ margin.left + margin.right)? props.data_json.length * 100+ margin.left + margin.right: width;
-		console.log(overwidth);
-		console.log(width);
-
-		
+	const overwidth =
+		width < props.data_json.length * 20 + margin.left + margin.right
+			? props.data_json.length * 100 + margin.left + margin.right
+			: width;
+	console.log(overwidth);
+	console.log(width);
 
 	const getX = d3
 		.scaleTime()
@@ -39,9 +38,6 @@ export default function Chart(props) {
 	const getXAxis = (ref) => {
 		const xAxis = d3.axisBottom(getX);
 		d3.select(ref).call(xAxis.tickFormat(d3.timeFormat("%M:%S")));
-
-
-		
 	};
 
 	const getYAxis = (ref) => {
@@ -73,8 +69,6 @@ export default function Chart(props) {
 		setActiveIndex(null);
 	};
 
-
-
 	// const parent = d3.create("div");
 
 	// parent.append("svg")
@@ -84,105 +78,110 @@ export default function Chart(props) {
 	// 	.style("pointer-events", "none")
 	// 	.style("z-index", 1)
 	// 	.call(svg => svg.append("g").call(getYAxis));
-  
+
 	// const body = parent.append("div")
 	// 	.style("overflow-x", "scroll")
 	// 	.style("-webkit-overflow-scrolling", "touch");
-  
+
 	// body.append("svg")
 	// 	.attr("width", overwidth)
 	// 	.attr("height", height)
 	// 	.style("display", "block")
 	// 	.call(svg => svg.append("g").ref(linePath) )
-	  	
 
-//   // Initialize the scroll offset after yielding the chart to the DOM.
-//   body.node().scrollBy(overwidth, 0);
+	//   // Initialize the scroll offset after yielding the chart to the DOM.
+	//   body.node().scrollBy(overwidth, 0);
 
 	return (
-		// 
-		<div >
+		//
+		<div>
 			<svg
-			viewBox={`${margin.left+ margin.right+200} 0 ${width + margin.left + margin.right} 
+				viewBox={`${margin.left + margin.right + 200} 0 ${
+					width + margin.left + margin.right
+				} 
 			${height + margin.top + margin.bottom}`}
-			style={{height : height, position: "absolute", zIndex:"1",minHeight:height, maxHeight:height, width:width}}
-		
+				style={{
+					height: height,
+					position: "absolute",
+					zIndex: "1",
+					minHeight: height,
+					maxHeight: height,
+					width: width,
+				}}
 			>
-			<g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} />
-			
-			
-
-			</svg>
-
-
-		<div style={{width:width, height : height, position: "absolute", zIndex:"2", pointerEvents:"auto",overflowX:"scroll", flexDirection: "row-reverse", overflowAnchor:"auto"}}>
-
-			<svg
-			
-			height={height}
-				viewBox={`0 0 ${overwidth + margin.left + margin.right} 
-							${height + margin.top + margin.bottom}`}
-				onMouseMove={handleMouseMove}
-				onMouseLeave={handleMouseLeave}
-				style={{minHeight:height, maxHeight:height, width:"fit-content"}}
-				
-			>
-			
-				{/* <g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} /> */}
 				<g
-					className="axis xAxis"
-					ref={getXAxis}
-					transform={`translate(${0},${height})`}
+					className="axis"
+					ref={getYAxis}
+					transform={`translate(${margin.left})`}
 				/>
-				// area and line paths
-				<path fill={color} d={areaPath} opacity={0.3} />
-				<path strokeWidth={3} fill="none" stroke={color} d={linePath} />
-				{props.data_json.map((item, index) => {
-					return (
-						<g key={index}>
-							// hovering text
-							<text
-								fill="#666"
-								x={getX(item.date)}
-								y={getY(item.price) - 20}
-								textAnchor="middle"
-							>
-								{index === activeIndex ? item.price : ""}
-							</text>
-							// hovering circle
-							<circle
-								cx={getX(item.date)}
-								cy={getY(item.price)}
-								r={index === activeIndex ? 4 : 2}
-								fill={color}
-								strokeWidth={index === activeIndex ? 2 : 0}
-								stroke="#fff"
-								// style={{ transition: "ease-out .1s" }}
-							/>
-						</g>
-					);
-				})}
-			
-				// x- and y-axes
-				
-				// y-axis label
-				
-				// chart title
-				<text x={width / 2} y={0 - margin.top / 2} text-anchor="middle">
-					{props.label}
-				</text>
-				// chart subtitle
-				<a className="subtitle" target="_blank">
-					<text x="0" y={height + 50}>
-						{"Test Graph"}
-					</text>
-				</a>
-				
 			</svg>
 
-			
-			
-		</div>
+			<div
+				style={{
+					width: width,
+					height: height,
+					position: "absolute",
+					zIndex: "2",
+					pointerEvents: "auto",
+					overflowX: "scroll",
+					flexDirection: "row-reverse",
+					overflowAnchor: "auto",
+				}}
+			>
+				<svg
+					height={height}
+					viewBox={`0 0 ${overwidth + margin.left + margin.right} 
+							${height + margin.top + margin.bottom}`}
+					onMouseMove={handleMouseMove}
+					onMouseLeave={handleMouseLeave}
+					style={{ minHeight: height, maxHeight: height, width: "fit-content" }}
+				>
+					{/* <g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} /> */}
+					<g
+						className="axis xAxis"
+						ref={getXAxis}
+						transform={`translate(${0},${height})`}
+					/>
+					// area and line paths
+					<path fill={color} d={areaPath} opacity={0.3} />
+					<path strokeWidth={3} fill="none" stroke={color} d={linePath} />
+					{props.data_json.map((item, index) => {
+						return (
+							<g key={index}>
+								// hovering text
+								<text
+									fill="#666"
+									x={getX(item.date)}
+									y={getY(item.price) - 20}
+									textAnchor="middle"
+								>
+									{index === activeIndex ? item.price : ""}
+								</text>
+								// hovering circle
+								<circle
+									cx={getX(item.date)}
+									cy={getY(item.price)}
+									r={index === activeIndex ? 4 : 2}
+									fill={color}
+									strokeWidth={index === activeIndex ? 2 : 0}
+									stroke="#fff"
+									// style={{ transition: "ease-out .1s" }}
+								/>
+							</g>
+						);
+					})}
+					// x- and y-axes // y-axis label // chart title
+					<text x={width / 2} y={0 - margin.top / 2} text-anchor="middle">
+						{props.label}
+					</text>
+					// chart subtitle
+					<a className="subtitle" target="_blank">
+						<text x="0" y={height + 50}>
+							{"Test Graph"}
+						</text>
+					</a>
+				</svg>
+			</div>
 		</div>
 	);
 }
