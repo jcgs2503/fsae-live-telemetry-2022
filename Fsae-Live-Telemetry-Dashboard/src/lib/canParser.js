@@ -72,4 +72,4 @@ function canParser(id, hexString) {
 // console.log(canParser(16, "40800000d17f0000"));
 // console.log(canParser(16, "0000006303f20546"));
 // console.log(canParser(18, "0d27000003de0186"));
-console.log(canParser(32, "0000150000010000"));
+console.log(canParser(17, "d20000d200e600dc"));
