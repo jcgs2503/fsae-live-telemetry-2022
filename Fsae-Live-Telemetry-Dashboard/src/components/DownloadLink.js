@@ -7,15 +7,15 @@ import { useData } from "../contexts/DataContext";
 const { currentData } = useData();
 
 
-// var data = [
-//     ['Data', currentData.data], 
-//     ['TimeStamp', currentData.],
-//     ['ID', currentData.],
-// ];
+var data = [
+    ['Data', currentData.data], 
+    ['TimeStamp', currentData.timestamp],
+    ['ID', currentData.id],
+];
 
 function download_csv_file() {  
   
-    var csv_file = 'Data,TimeStamp,ID\n';  
+    var csv_file = 'Data Signals,TimeLog,ID\n';  
       
     data.forEach(function(row) {  
             csv_file += row.join(',');  
