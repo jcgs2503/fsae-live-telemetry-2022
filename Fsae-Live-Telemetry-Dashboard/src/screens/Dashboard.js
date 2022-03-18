@@ -63,19 +63,21 @@ export default function Dashboard() {
 	const [rightShow, setRightShow] = useState(false);
 	const [dataGroup, setDataGroup] = useState(dataGroupList[0]);
 	const [selectedData, setSelectedData] = useState(0);
+	const [selecteddbcdashboard, setselecteddbcdashboard] = useState([]);
 	const parseTime = d3.timeParse("%M:%S");
-	const [i, setI] = useState(36);
-
+	const [i, setI] = useState(0);
+	let today = new Date();
 	let initialMetaData = [
 		{
 			name: "test #1",
 			createdTime: "2021/10/20 20:08:25",
 			data: [
-				{ date: "12:32", price: "20" },
-				{ date: "12:33", price: "5" },
-				{ date: "12:36", price: "8" },
-				{ date: "12:39", price: "10" },
-				{ date: "12:42", price: "10" },
+				{ date: parseTime(`${today.getMinutes()}:${today.getSeconds()}`), price: "20" },
+				// { date: parseTime(`${today.getMinutes()}:${today.getSeconds() + 1}`), price: "20" },
+				// { date: "12:33", price: "5" },
+				// { date: "12:36", price: "8" },
+				// { date: "12:39", price: "10" },
+				// { date: "12:42", price: "10" },
 			],
 		},
 		{
@@ -112,6 +114,8 @@ export default function Dashboard() {
 		setI(37);
 	}, [selectedData]);
 
+	console.log(dbc);
+
 	const [metaData, setMetaData] = useState(initialMetaData.reverse());
 	const dbcDataName = dbc["params"]
 		.map((e, idx) => ({
@@ -142,17 +146,25 @@ export default function Dashboard() {
 	const handleRightClose = () => setRightShow(false);
 
 	function addData() {
-		console.log(i + " " + parseTime(`12:${i}`));
-		setI(i + 1);
+		
+		setI(i +1);
+		
+	
 		setMetaData((prev) => {
 			let prevCopy = [...prev];
+			
 			prevCopy[selectedData].data.push({
-				date: parseTime(`12:${i}`),
+				date: parseTime(`${today.getMinutes()}:${today.getSeconds()}`),
 				price: Number(Math.floor(Math.random() * 100)),
 			});
 			return prevCopy;
 		});
 	}
+
+	// fix smppth scroll
+	// figure out how to add timestamp
+	// how to save time in firebase?
+	// how to start graph with no prior data?
 
 	return (
 		<Page>
@@ -167,53 +179,38 @@ export default function Dashboard() {
 					<AddRoundedIcon />
 				</Button>
 			</Navbar>
-			{/* <Charts> */}
-				{/* <ChartStyle >
-					<Button
-						onClick={addData}
-						variant="outline-light"
-						style={{ marginBottom: "20px" }}
-					>
-						<AddRoundedIcon />
-					</Button>
-					<CurrentData>
-						{
-							metaData[selectedData].data[
-								metaData[selectedData].data.length - 1
-							].price
-						}
-					</CurrentData>
 
-					<Chart
-						data_json={metaData[selectedData].data}
-						label={metaData[selectedData].name}
-					></Chart>
-				</ChartStyle> */}
+			{selecteddbcdashboard.map((dbc_item) =>
+			<div className="chart-padding">
 				<ChartStyle>
-					<Button
-						onClick={addData}
-						variant="outline-light"
-						style={{ marginBottom: "20px" }}
-					>
-						<AddRoundedIcon />
-					</Button>
-					<CurrentData>
-						{
-							metaData[selectedData].data[
-								metaData[selectedData].data.length - 1
-							].price
-						}
-					</CurrentData>
-
+				<Button
+					onClick={addData}
+					variant="outline-light"
+					style={{ marginBottom: "20px" }}
 					
+				>
+					<AddRoundedIcon />
+				</Button>
 
-				</ChartStyle>
-			{/* </Charts> */}
+			
+
+			</ChartStyle>
+
 
 			<Chart
-						data_json={metaData[selectedData].data}
-						label={metaData[selectedData].name}
-					></Chart>
+					data_json={metaData[selectedData].data}
+					label={metaData[selectedData].name}
+					data={dbc}
+					indi={dbc_item["name"]}
+				></Chart>
+
+			</div>
+				
+			)}
+
+
+			
+				
 
 
 			
@@ -234,6 +231,8 @@ export default function Dashboard() {
 				handleRightClose={handleRightClose}
 				dbcDataName={dbcDataName}
 				dbcDataNameDetail={dbcDataNameDetail}
+				selecteddbcdashboard={selecteddbcdashboard}
+				setselecteddbcdashboard = {setselecteddbcdashboard}
 			/>
 		</Page>
 	);

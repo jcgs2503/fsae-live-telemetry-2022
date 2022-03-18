@@ -8,7 +8,7 @@ import "../index.css";
 export default function Chart(props) {
 	const margin = { top: 40, right: 40, bottom: 60, left: 60 },
 		width = 1300 - margin.left - margin.right,
-		height = 280 - margin.top - margin.bottom,
+		height = 400 - margin.top - margin.bottom,
 		color = "OrangeRed";
 
 	// This will generate the chart
@@ -18,17 +18,16 @@ export default function Chart(props) {
 	const yMinValue = d3.min(props.data_json, (d) => d.price),
 		yMaxValue = d3.max(props.data_json, (d) => d.price);
 
+		const xMinValue = d3.min(props.data_json, (d) => d.date),
+		xMaxValue = d3.max(props.data_json, (d) => d.date);
+
 
 		
 		const overwidth = (width<props.data_json.length * 20+ margin.left + margin.right)? props.data_json.length * 100+ margin.left + margin.right: width;
-		console.log(overwidth);
-		console.log(width);
-
-		
 
 	const getX = d3
 		.scaleTime()
-		.domain(d3.extent(props.data_json, (d) => d.date))
+		.domain([xMinValue , xMaxValue ])
 		.range([margin.left, overwidth + margin.right]);
 
 	const getY = d3
@@ -73,31 +72,9 @@ export default function Chart(props) {
 		setActiveIndex(null);
 	};
 
+	
 
 
-	// const parent = d3.create("div");
-
-	// parent.append("svg")
-	// 	.attr("width", width)
-	// 	.attr("height", height)
-	// 	.style("position", "absolute")
-	// 	.style("pointer-events", "none")
-	// 	.style("z-index", 1)
-	// 	.call(svg => svg.append("g").call(getYAxis));
-  
-	// const body = parent.append("div")
-	// 	.style("overflow-x", "scroll")
-	// 	.style("-webkit-overflow-scrolling", "touch");
-  
-	// body.append("svg")
-	// 	.attr("width", overwidth)
-	// 	.attr("height", height)
-	// 	.style("display", "block")
-	// 	.call(svg => svg.append("g").ref(linePath) )
-	  	
-
-//   // Initialize the scroll offset after yielding the chart to the DOM.
-//   body.node().scrollBy(overwidth, 0);
 
 	return (
 		// 
@@ -116,7 +93,12 @@ export default function Chart(props) {
 
 
 		<div style={{width:width, height : height, position: "absolute", zIndex:"2", pointerEvents:"auto",overflowX:"scroll", flexDirection: "row-reverse", overflowAnchor:"auto"}}>
-
+		<a className="title" target="_blank">
+					<text x="0" y={height + 50}>
+						{props.indi}
+					</text>
+				</a>
+			
 			<svg
 			
 			height={height}
@@ -127,7 +109,7 @@ export default function Chart(props) {
 				style={{minHeight:height, maxHeight:height, width:"fit-content"}}
 				
 			>
-			
+				
 				{/* <g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} /> */}
 				<g
 					className="axis xAxis"
@@ -168,15 +150,9 @@ export default function Chart(props) {
 				// y-axis label
 				
 				// chart title
-				<text x={width / 2} y={0 - margin.top / 2} text-anchor="middle">
-					{props.label}
-				</text>
+				
 				// chart subtitle
-				<a className="subtitle" target="_blank">
-					<text x="0" y={height + 50}>
-						{"Test Graph"}
-					</text>
-				</a>
+				
 				
 			</svg>
 

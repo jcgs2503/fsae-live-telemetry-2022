@@ -26,6 +26,11 @@
 	
 }
 
+.chart-padding{
+	margin: 5vw;
+	padding: 5vw;
+}
+
 
 svg {
 	display: flex;

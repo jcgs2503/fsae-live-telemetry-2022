@@ -78,9 +78,12 @@ export default function RightOffCanvas({
 	handleRightClose,
 	dbcDataName,
 	dbcDataNameDetail,
+	selecteddbcdashboard, // how many tests are selected
+	setselecteddbcdashboard
 }) {
+
 	const { dbc } = useData();
-	const [selectedDBC, setSelectedDBC] = useState([]);
+	const [selectedDBC, setSelectedDBC] = useState(selecteddbcdashboard);
 	const [draggableDBC, setDraggableDBC] = useState(dbcDataName);
 	const [filteredDraggableDBC, setFilteredDraggableDBC] = useState(dbcDataName);
 	const [search, setSearch] = useState("");
@@ -96,8 +99,9 @@ export default function RightOffCanvas({
 	const [chosedData, setChosedData] = useState(initialChosedData);
 	const [dropDown, setDropDown] = useState(initialDropDown);
 	const [disableChoose, setDisableChoose] = useState(false);
-
+	setselecteddbcdashboard(selectedDBC);
 	function onDragEnd(res) {
+		
 		if (!res.destination) return;
 		if (res.destination.droppableId !== res.source.droppableId) {
 			if (res.source.droppableId === "availableData") {
@@ -133,6 +137,7 @@ export default function RightOffCanvas({
 			newSelectedDBC.splice(res.destination.index, 0, reorderedItem);
 			setSelectedDBC(newSelectedDBC);
 		}
+		
 	}
 
 	function Select(e) {
