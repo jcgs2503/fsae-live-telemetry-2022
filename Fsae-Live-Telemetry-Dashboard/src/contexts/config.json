@@ -176,7 +176,7 @@
 			"comment": "Brake IR channels 9-12",
 			"signals": [
 				{
-					"name": "BRK_IR_Channel_09",
+					"name": "BRK_IR_Channel_9",
 					"label": "brk_ir_temp_2.brk_ir_channel_9",
 					"startBit": 55,
 					"bitLength": 16,

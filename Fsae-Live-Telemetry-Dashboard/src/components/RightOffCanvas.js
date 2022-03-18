@@ -349,6 +349,7 @@ export default function RightOffCanvas({
 																				name={e}
 																				checked={chosedData[e]}
 																				setChosedData={setChosedData}
+																				id={item.name}
 																			/>
 																		))}
 																	</ListItem>

@@ -85,6 +85,7 @@ export default function Dashboard() {
 			</Table>
 			{/* {currentData[dataGroup] && JSON.stringify(currentData[dataGroup])} */}
 			{/* {dataNum} */}
+			{JSON.stringify(currentData)}
 		</>
 	);
 }

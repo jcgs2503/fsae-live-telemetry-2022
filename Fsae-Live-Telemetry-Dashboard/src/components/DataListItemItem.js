@@ -31,10 +31,11 @@ export default function DataListItemItem({
 	checked,
 	setChosedData,
 	checkedDisplay,
+	id,
 }) {
 	if (display) {
 		return (
-			<ListItemItem>
+			<ListItemItem id={id}>
 				{name}
 				{checkedDisplay && (
 					<Check
