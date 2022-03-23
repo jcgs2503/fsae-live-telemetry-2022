@@ -22,6 +22,12 @@
 	background-color: aqua;
 }
 
+.chart-padding{
+	margin: 5vw;
+	padding: 5vw;
+}
+
+
 svg {
 	display: flex;
 	flex-direction: row-reverse;
