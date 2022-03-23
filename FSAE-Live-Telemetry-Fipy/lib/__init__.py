@@ -3,3 +3,9 @@ from lib.uLTE import *
 from lib.uWiFi import *
 from lib.uCAN import *
 from lib.uDataFilter import *
+from lib.MQTTClient import *
+from lib.MQTTConst import *
+from lib.MQTTDeviceShadow import *
+from lib.MQTTLib import *
+from lib.MQTTMsgHandler import *
+from MQTTShadowManager import *
