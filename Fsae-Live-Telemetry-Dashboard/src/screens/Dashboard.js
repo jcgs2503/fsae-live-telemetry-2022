@@ -12,7 +12,7 @@ import RightOffCanvas from "../components/RightOffCanvas";
 
 const Page = styled.div`
 	width: 100%;
-	height: 100vh;
+	height: 1000vh;
 	background-color: #32343a;
 	padding-top: 20px;
 	padding-left: 40px;
@@ -72,7 +72,10 @@ export default function Dashboard() {
 			name: "test #1",
 			createdTime: "2021/10/20 20:08:25",
 			data: [
-				{ date: parseTime(`${today.getMinutes()}:${today.getSeconds()}`), price: "20" },
+				{
+					date: parseTime(`${today.getMinutes()}:${today.getSeconds()}`),
+					price: "20",
+				},
 				// { date: parseTime(`${today.getMinutes()}:${today.getSeconds() + 1}`), price: "20" },
 				// { date: "12:33", price: "5" },
 				// { date: "12:36", price: "8" },
@@ -146,13 +149,11 @@ export default function Dashboard() {
 	const handleRightClose = () => setRightShow(false);
 
 	function addData() {
-		
-		setI(i +1);
-		
-	
+		setI(i + 1);
+
 		setMetaData((prev) => {
 			let prevCopy = [...prev];
-			
+
 			prevCopy[selectedData].data.push({
 				date: parseTime(`${today.getMinutes()}:${today.getSeconds()}`),
 				price: Number(Math.floor(Math.random() * 100)),
@@ -180,40 +181,26 @@ export default function Dashboard() {
 				</Button>
 			</Navbar>
 
-			{selecteddbcdashboard.map((dbc_item) =>
-			<div className="chart-padding">
-				<ChartStyle>
-				<Button
-					onClick={addData}
-					variant="outline-light"
-					style={{ marginBottom: "20px" }}
-					
-				>
-					<AddRoundedIcon />
-				</Button>
+			{selecteddbcdashboard.map((dbc_item) => (
+				<div className="chart-padding">
+					<ChartStyle>
+						<Button
+							onClick={addData}
+							variant="outline-light"
+							style={{ marginBottom: "20px" }}
+						>
+							<AddRoundedIcon />
+						</Button>
+					</ChartStyle>
 
-			
-
-			</ChartStyle>
-
-
-			<Chart
-					data_json={metaData[selectedData].data}
-					label={metaData[selectedData].name}
-					data={dbc}
-					indi={dbc_item["name"]}
-				></Chart>
-
-			</div>
-				
-			)}
-
-
-			
-				
-
-
-			
+					<Chart
+						data_json={metaData[selectedData].data}
+						label={metaData[selectedData].name}
+						data={dbc}
+						indi={dbc_item["name"]}
+					></Chart>
+				</div>
+			))}
 
 			<LeftOffCanvas
 				show={show}
@@ -232,7 +219,7 @@ export default function Dashboard() {
 				dbcDataName={dbcDataName}
 				dbcDataNameDetail={dbcDataNameDetail}
 				selecteddbcdashboard={selecteddbcdashboard}
-				setselecteddbcdashboard = {setselecteddbcdashboard}
+				setselecteddbcdashboard={setselecteddbcdashboard}
 			/>
 		</Page>
 	);

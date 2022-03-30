@@ -10,13 +10,15 @@ function reverseString(str) {
 	return str.split("").reverse().join("");
 }
 
-function canParser(id, hexString) {
+export function canParser(id, hexString) {
 	let inputData = hex2binary(hexString);
 	const node = data.params.filter((e) => e.canId === id)[0];
 	const signals = node.signals.map((e) => e);
 
 	const resultName = node.name;
 	let signalsOutput = [];
+	let result;
+	let start;
 	signals.map((e) => {
 		if (e.isLittleEndian) {
 			let count = Math.floor(e.bitLength / 8);

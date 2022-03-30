@@ -3,6 +3,7 @@ import { useData } from "../contexts/DataContext";
 import { JsonToTable } from "react-json-to-table";
 import { Form } from "react-bootstrap";
 import styled from "@emotion/styled";
+import { canParser } from "../lib/canParser";
 
 const SelectOption = styled(Form.Control)`
 	margin-left: 20px;
@@ -85,7 +86,6 @@ export default function Dashboard() {
 			</Table>
 			{/* {currentData[dataGroup] && JSON.stringify(currentData[dataGroup])} */}
 			{/* {dataNum} */}
-			{JSON.stringify(currentData)}
 		</>
 	);
 }
