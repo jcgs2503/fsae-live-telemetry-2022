@@ -9,8 +9,7 @@ function hex2binary(hex) {
 function reverseString(str) {
 	return str.split("").reverse().join("");
 }
-
-export function canParser(id, hexString) {
+export function canParser(id, hexString, filter = true) {
 	let inputData = hex2binary(hexString);
 	const node = data.params.filter((e) => e.canId === id)[0];
 	const signals = node.signals.map((e) => e);
@@ -48,7 +47,12 @@ export function canParser(id, hexString) {
 		const signalName = e.name;
 		const signalFactor = e.factor;
 		const offset = e.offset;
-		const resultData = slicedData * signalFactor + offset;
+		let resultData = slicedData * signalFactor + offset;
+		const min = e.min;
+		const max = e.max;
+		if (resultData > max || resultData < min) {
+			resultData = null;
+		}
 		if (e.sourceUnit) {
 			signalsOutput.push({
 				name: signalName,
@@ -69,8 +73,3 @@ export function canParser(id, hexString) {
 	};
 	return output;
 }
-
-// console.log(canParser(16, "40800000d17f0000"));
-// console.log(canParser(16, "0000006303f20546"));
-console.log(canParser(18, "0d27000003de0186"));
-// console.log(canParser(17, "d20000d200e600dc"));

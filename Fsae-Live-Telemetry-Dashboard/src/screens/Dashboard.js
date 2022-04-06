@@ -9,10 +9,12 @@ import { useData } from "../contexts/DataContext";
 import Chart from "../components/Chart";
 import LeftOffCanvas from "../components/LeftOffCanvas";
 import RightOffCanvas from "../components/RightOffCanvas";
+import NewChart from "../components/NewChart";
 
 const Page = styled.div`
 	width: 100%;
-	height: 1000vh;
+	height: fit-content;
+	min-height: 100vh;
 	background-color: #32343a;
 	padding-top: 20px;
 	padding-left: 40px;
@@ -37,20 +39,6 @@ const Logo = styled.img`
 	height: auto;
 `;
 
-const ChartStyle = styled.div`
-	margin-top: 60px;
-	color: white;
-`;
-
-const Charts = styled.div`
-	/* display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between; */
-	padding-left: 30px;
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-`;
-
 const CurrentData = styled.div`
 	float: right;
 	margin-right: 15%;
@@ -64,62 +52,18 @@ export default function Dashboard() {
 	const [dataGroup, setDataGroup] = useState(dataGroupList[0]);
 	const [selectedData, setSelectedData] = useState(0);
 	const [selecteddbcdashboard, setselecteddbcdashboard] = useState([]);
-	const parseTime = d3.timeParse("%M:%S");
-	const [i, setI] = useState(0);
-	let today = new Date();
-	let initialMetaData = [
-		{
-			name: "test #1",
-			createdTime: "2021/10/20 20:08:25",
-			data: [
-				{
-					date: parseTime(`${today.getMinutes()}:${today.getSeconds()}`),
-					price: "20",
-				},
-				// { date: parseTime(`${today.getMinutes()}:${today.getSeconds() + 1}`), price: "20" },
-				// { date: "12:33", price: "5" },
-				// { date: "12:36", price: "8" },
-				// { date: "12:39", price: "10" },
-				// { date: "12:42", price: "10" },
-			],
-		},
-		{
-			name: "test #2",
-			createdTime: "2021/10/22 16:25:36",
-			data: [
-				{ date: "12:32", price: "10" },
-				{ date: "12:34", price: "5" },
-				{ date: "12:37", price: "20" },
-				{ date: "12:39", price: "5" },
-				{ date: "12:42", price: "10" },
-			],
-		},
-		{
-			name: "test #3",
-			createdTime: "2021/10/25 08:46:44",
-			data: [
-				{ date: "12:31", price: "6" },
-				{ date: "12:33", price: "15" },
-				{ date: "12:34", price: "150" },
-				{ date: "12:35", price: "1" },
-				{ date: "12:36", price: "100" },
-			],
-		},
-	];
-	initialMetaData.forEach((d) => {
-		d.data.forEach((i) => {
-			i.date = parseTime(i.date);
-			i.price = Number(i.price);
+	const [content, setContent] = useState([]);
+	let initialChosedData = {};
+	dbc["params"].forEach((e) => {
+		let names = e["signals"].map((ele) => ele["name"]);
+		names.forEach((name) => {
+			initialChosedData[name] = false;
 		});
 	});
+	const [chosedData, setChosedData] = useState(initialChosedData);
 
-	useEffect(() => {
-		setI(37);
-	}, [selectedData]);
+	// console.log(dbc);
 
-	console.log(dbc);
-
-	const [metaData, setMetaData] = useState(initialMetaData.reverse());
 	const dbcDataName = dbc["params"]
 		.map((e, idx) => ({
 			name: e["name"],
@@ -136,6 +80,7 @@ export default function Dashboard() {
 			}
 			return 0;
 		});
+
 	let dbcDataNameDetail = [];
 	dbc["params"].forEach((e) => {
 		let names = e["signals"].map((ele) => ele["name"]);
@@ -148,24 +93,29 @@ export default function Dashboard() {
 	const handleRightShow = () => setRightShow(true);
 	const handleRightClose = () => setRightShow(false);
 
-	function addData() {
-		setI(i + 1);
-
-		setMetaData((prev) => {
-			let prevCopy = [...prev];
-
-			prevCopy[selectedData].data.push({
-				date: parseTime(`${today.getMinutes()}:${today.getSeconds()}`),
-				price: Number(Math.floor(Math.random() * 100)),
-			});
-			return prevCopy;
-		});
-	}
-
 	// fix smppth scroll
 	// figure out how to add timestamp
 	// how to save time in firebase?
 	// how to start graph with no prior data?
+
+	useEffect(() => {
+		let newContent = [];
+		selecteddbcdashboard.map((dbc_item) => {
+			let node = dbc["params"].filter((e) => e["name"] === dbc_item["name"])[0];
+			console.log(node);
+			if (node) {
+				console.log(node);
+				node["signals"]
+					.sort((a, b) => (a.name > b.name ? 1 : -1))
+					.map((s) => {
+						if (chosedData[s.name]) {
+							newContent.push({ id: node.canId, signal: s.name });
+						}
+					});
+			}
+		});
+		setContent(newContent);
+	}, [selecteddbcdashboard, chosedData]);
 
 	return (
 		<Page>
@@ -181,31 +131,15 @@ export default function Dashboard() {
 				</Button>
 			</Navbar>
 
-			{selecteddbcdashboard.map((dbc_item) => (
-				<div className="chart-padding">
-					<ChartStyle>
-						<Button
-							onClick={addData}
-							variant="outline-light"
-							style={{ marginBottom: "20px" }}
-						>
-							<AddRoundedIcon />
-						</Button>
-					</ChartStyle>
-
-					<Chart
-						data_json={metaData[selectedData].data}
-						label={metaData[selectedData].name}
-						data={dbc}
-						indi={dbc_item["name"]}
-					></Chart>
-				</div>
-			))}
+			<div className="chart-grid" style={{ paddingTop: "100px" }}>
+				{content.map((e) => (
+					<NewChart id={e.id} signal={e.signal} key={`${e.id}-${e.signal}`} />
+				))}
+			</div>
 
 			<LeftOffCanvas
 				show={show}
 				handleClose={handleClose}
-				metaData={metaData}
 				selectedData={selectedData}
 				setSelectedData={setSelectedData}
 				setDataGroup={setDataGroup}
@@ -220,6 +154,8 @@ export default function Dashboard() {
 				dbcDataNameDetail={dbcDataNameDetail}
 				selecteddbcdashboard={selecteddbcdashboard}
 				setselecteddbcdashboard={setselecteddbcdashboard}
+				chosedData={chosedData}
+				setChosedData={setChosedData}
 			/>
 		</Page>
 	);

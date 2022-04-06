@@ -79,29 +79,25 @@ export default function RightOffCanvas({
 	dbcDataName,
 	dbcDataNameDetail,
 	selecteddbcdashboard, // how many tests are selected
-	setselecteddbcdashboard
+	setselecteddbcdashboard,
+	chosedData,
+	setChosedData,
 }) {
-
 	const { dbc } = useData();
 	const [selectedDBC, setSelectedDBC] = useState(selecteddbcdashboard);
 	const [draggableDBC, setDraggableDBC] = useState(dbcDataName);
 	const [filteredDraggableDBC, setFilteredDraggableDBC] = useState(dbcDataName);
 	const [search, setSearch] = useState("");
-	let initialChosedData = {};
+
 	let initialDropDown = {};
 	dbc["params"].forEach((e) => {
-		let names = e["signals"].map((ele) => ele["name"]);
-		names.forEach((name) => {
-			initialChosedData[name] = false;
-		});
 		initialDropDown[e["name"]] = false;
 	});
-	const [chosedData, setChosedData] = useState(initialChosedData);
+
 	const [dropDown, setDropDown] = useState(initialDropDown);
 	const [disableChoose, setDisableChoose] = useState(false);
 	setselecteddbcdashboard(selectedDBC);
 	function onDragEnd(res) {
-		
 		if (!res.destination) return;
 		if (res.destination.droppableId !== res.source.droppableId) {
 			if (res.source.droppableId === "availableData") {
@@ -137,7 +133,6 @@ export default function RightOffCanvas({
 			newSelectedDBC.splice(res.destination.index, 0, reorderedItem);
 			setSelectedDBC(newSelectedDBC);
 		}
-		
 	}
 
 	function Select(e) {

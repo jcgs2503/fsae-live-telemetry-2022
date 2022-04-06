@@ -22,9 +22,11 @@
 	background-color: aqua;
 }
 
-.chart-padding {
-	margin: 5vw;
-	padding: 5vw;
+.chart-grid {
+	padding: 20px;
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
 }
 
 svg {

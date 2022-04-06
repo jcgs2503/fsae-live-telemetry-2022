@@ -19,7 +19,6 @@ const StyledDropdown = styled(Dropdown)`
 export default function LeftOffCanvas({
 	show,
 	handleClose,
-	metaData,
 	selectedData,
 	setSelectedData,
 	setDataGroup,
