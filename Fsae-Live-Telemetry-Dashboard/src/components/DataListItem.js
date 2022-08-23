@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { useData } from "../contexts/DataContext";
 
 const NewListItem = styled.button`
 	width: 100%;
@@ -12,9 +14,9 @@ const NewListItem = styled.button`
 	padding-left: 20px;
 	padding-right: 20px;
 	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
 	padding-top: 8px;
 	padding-bottom: 8px;
 `;
@@ -72,12 +74,24 @@ export default function DataListItem({
 	createNew,
 	setSelectedData,
 	id,
+	dataGroup,
+	collectingData,
 }) {
+	const { startNewTest } = useData();
+	const [newTest, setNewTest] = useState({});
+	function handleSubmit() {
+		startNewTest(dataGroup, newTest.name, newTest.createdTimeStamp);
+	}
 	if (active) {
 		return (
 			<ListItemActive>
 				<div>
-					<div>{name}</div>
+					{collectingData ? (
+						<div>{name} - Collecting Data</div>
+					) : (
+						<div>{name}</div>
+					)}
+
 					{createdTime ? (
 						<ListItemCreatedTimeActive>{createdTime}</ListItemCreatedTimeActive>
 					) : (
@@ -101,8 +115,18 @@ export default function DataListItem({
 						height: "40px",
 						marginTop: "10px",
 						marginBottom: "10px",
+						marginRight: "10px",
+					}}
+					onChange={(e) => {
+						setNewTest({
+							name: e.currentTarget.value,
+							createdTimeStamp: Math.floor(Date.now() / 1000),
+						});
 					}}
 				/>
+				<Button variant="primary" type="submit" onClick={handleSubmit}>
+					Submit
+				</Button>
 			</NewListItem>
 		);
 	} else {
@@ -113,7 +137,12 @@ export default function DataListItem({
 				}}
 			>
 				<>
-					<div>{name}</div>
+					{collectingData ? (
+						<div>{name} - Collecting Data</div>
+					) : (
+						<div>{name}</div>
+					)}
+
 					{createdTime ? (
 						<ListItemCreatedTime>{createdTime}</ListItemCreatedTime>
 					) : (

@@ -6,10 +6,9 @@ import Button from "react-bootstrap/Button";
 import MenuIcon from "@mui/icons-material/MenuRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { useData } from "../contexts/DataContext";
-import Chart from "../components/Chart";
 import LeftOffCanvas from "../components/LeftOffCanvas";
 import RightOffCanvas from "../components/RightOffCanvas";
-import NewChart from "../components/NewChart";
+import Chart from "../components/Chart";
 
 const Page = styled.div`
 	width: 100%;
@@ -62,8 +61,6 @@ export default function Dashboard() {
 	});
 	const [chosedData, setChosedData] = useState(initialChosedData);
 
-	// console.log(dbc);
-
 	const dbcDataName = dbc["params"]
 		.map((e, idx) => ({
 			name: e["name"],
@@ -93,7 +90,7 @@ export default function Dashboard() {
 	const handleRightShow = () => setRightShow(true);
 	const handleRightClose = () => setRightShow(false);
 
-	// fix smppth scroll
+	// fix smooth scroll
 	// figure out how to add timestamp
 	// how to save time in firebase?
 	// how to start graph with no prior data?
@@ -102,9 +99,8 @@ export default function Dashboard() {
 		let newContent = [];
 		selecteddbcdashboard.map((dbc_item) => {
 			let node = dbc["params"].filter((e) => e["name"] === dbc_item["name"])[0];
-			console.log(node);
+
 			if (node) {
-				console.log(node);
 				node["signals"]
 					.sort((a, b) => (a.name > b.name ? 1 : -1))
 					.map((s) => {
@@ -133,7 +129,13 @@ export default function Dashboard() {
 
 			<div className="chart-grid" style={{ paddingTop: "100px" }}>
 				{content.map((e) => (
-					<NewChart id={e.id} signal={e.signal} key={`${e.id}-${e.signal}`} />
+					<Chart
+						id={e.id}
+						signal={e.signal}
+						key={`${e.id}-${e.signal}`}
+						dataGroup={dataGroup}
+						selectedData={selectedData}
+					/>
 				))}
 			</div>
 

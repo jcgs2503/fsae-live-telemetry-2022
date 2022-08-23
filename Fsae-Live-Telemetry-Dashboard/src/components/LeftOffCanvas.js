@@ -25,7 +25,7 @@ export default function LeftOffCanvas({
 	dataGroup,
 	currentData,
 }) {
-	const { dataGroupList } = useData();
+	const { dataGroupList, collectingDataName } = useData();
 
 	return (
 		<OffCanvas show={show} onHide={handleClose}>
@@ -61,18 +61,54 @@ export default function LeftOffCanvas({
 			<OffCanvas.Body
 				style={{ paddingLeft: "0px", paddingRight: "0px", paddingTop: "0px" }}
 			>
-				{currentData[dataGroup] && (
+				{currentData[dataGroup] ? (
 					<List>
-						<ListItem createNew />
+						<ListItem createNew dataGroup={dataGroup} />
 
-						{Object.keys(currentData[dataGroup]).map((e, idx) => (
-							<ListItem
-								id={idx}
-								name={e}
-								active={selectedData === idx}
-								setSelectedData={setSelectedData}
-							/>
-						))}
+						{Object.keys(currentData[dataGroup])
+							.sort(
+								(a, b) =>
+									currentData[dataGroup][a]["init"].createdTimeStamp -
+									currentData[dataGroup][b]["init"].createdTimeStamp
+							)
+							.map((e, idx) => {
+								let formattedTime;
+								if (currentData[dataGroup][e]["init"]) {
+									var date = new Date(
+										currentData[dataGroup][e]["init"].createdTimeStamp * 1000
+									);
+
+									var minutes = "0" + date.getMinutes();
+									var seconds = "0" + date.getSeconds();
+									formattedTime =
+										date.getFullYear() +
+										"/" +
+										(date.getMonth() + 1) +
+										"/" +
+										date.getDate() +
+										" " +
+										date.getHours() +
+										":" +
+										minutes.substr(-2) +
+										":" +
+										seconds.substr(-2);
+								}
+
+								return (
+									<ListItem
+										id={idx}
+										name={e}
+										active={selectedData === idx}
+										setSelectedData={setSelectedData}
+										createdTime={formattedTime}
+										collectingData={e == collectingDataName}
+									/>
+								);
+							})}
+					</List>
+				) : (
+					<List>
+						<ListItem createNew dataGroup={dataGroup} />
 					</List>
 				)}
 			</OffCanvas.Body>

@@ -1,162 +1,245 @@
-import React from "react";
-import * as d3 from "d3";
-// import LineChart from "react-linechart";
-// import "../node_modules/react-linechart/dist/styles.css";
+import React, { useEffect, useState } from "react";
+import "chartjs-adapter-moment";
+import {
+	Chart as ChartJS,
+	ArcElement,
+	LineElement,
+	BarElement,
+	PointElement,
+	BarController,
+	BubbleController,
+	DoughnutController,
+	LineController,
+	PieController,
+	PolarAreaController,
+	RadarController,
+	ScatterController,
+	CategoryScale,
+	LinearScale,
+	LogarithmicScale,
+	RadialLinearScale,
+	TimeScale,
+	TimeSeriesScale,
+	Decimation,
+	Filler,
+	Legend,
+	Title,
+	Tooltip,
+	SubTitle,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import { canParser } from "../lib/canParser.js";
+import dbcConfig from "../contexts/config.json";
+import { text } from "d3";
+import { useData } from "../contexts/DataContext";
 
-import "../index.css";
+ChartJS.register(
+	ArcElement,
+	LineElement,
+	BarElement,
+	PointElement,
+	BarController,
+	BubbleController,
+	DoughnutController,
+	LineController,
+	PieController,
+	PolarAreaController,
+	RadarController,
+	ScatterController,
+	CategoryScale,
+	LinearScale,
+	LogarithmicScale,
+	RadialLinearScale,
+	TimeScale,
+	TimeSeriesScale,
+	Decimation,
+	Filler,
+	Legend,
+	Title,
+	Tooltip,
+	SubTitle
+);
 
-export default function Chart(props) {
-	const margin = { top: 40, right: 40, bottom: 60, left: 60 },
-		width = 1300 - margin.left - margin.right,
-		height = 400 - margin.top - margin.bottom,
-		color = "OrangeRed";
+export default function NewChart({ id, signal, dataGroup, selectedData }) {
+	const { currentData } = useData();
+	const dataPoints =
+		currentData[dataGroup][Object.keys(currentData[dataGroup])[selectedData]];
+	const createdTime = dataPoints["init"]["createdTimeStamp"] * 1000;
+	let idName = dbcConfig["params"].filter((e) => e["canId"] === id)[0]["name"];
+	let unit = "";
+	if (
+		dbcConfig["params"]
+			.filter((e) => e["canId"] === id)[0]
+			["signals"].filter((e) => e["name"] === signal)[0]["sourceUnit"]
+	) {
+		unit = dbcConfig["params"]
+			.filter((e) => e["canId"] === id)[0]
+			["signals"].filter((e) => e["name"] === signal)[0]
+			["sourceUnit"].replace("�", "°");
+	}
+	let parsedData = [];
 
-	// This will generate the chart
-	const [activeIndex, setActiveIndex] = React.useState(null),
-		[data, setData] = React.useState([]);
+	for (const [key, value] of Object.entries(dataPoints)) {
+		if (value["data"] && key != "init") {
+			for (let i of value["data"]) {
+				parsedData.push(canParser(i["id"], i["data"], i["timestamp_ms"]));
+			}
+		}
+	}
+	
 
-	const yMinValue = d3.min(props.data_json, (d) => d.price),
-		yMaxValue = d3.max(props.data_json, (d) => d.price);
+	let filteredData = parsedData.filter((e) => e&&e["canId"] === id);
+	console.log(filteredData);
+	let finalData = [];
+	let timestamps = [];
+	for (let i of filteredData) {
+		for (let j of i["signals"]) {
+			if (j["name"] === signal) {
+				if (j["data"] != null) {
+					finalData.push(parseFloat(j["data"].toFixed(2)));
+					timestamps.push(parseInt(j["timestamp"]));
+				} else {
+					finalData.push(finalData[finalData.length - 1]);
+					timestamps.push(parseInt(j["timestamp"]));
+				}
+			}
+		}
+	}
+	let i = 0;
 
-	const xMinValue = d3.min(props.data_json, (d) => d.date),
-		xMaxValue = d3.max(props.data_json, (d) => d.date);
+	let text;
+	if (unit) {
+		text = `${idName} - ${signal} (${unit})`;
+	} else {
+		text = `${idName} - ${signal}`;
+	}
 
-	const overwidth =
-		width < props.data_json.length * 20 + margin.left + margin.right
-			? props.data_json.length * 100 + margin.left + margin.right
-			: width;
+	const plugins = [
+		{
+			afterDraw: (chart: { tooltip?: any, scales?: any, ctx?: any }) => {
+				// eslint-disable-next-line no-underscore-dangle
+				if (chart.tooltip._active && chart.tooltip._active.length) {
+					// find coordinates of tooltip
+					const activePoint = chart.tooltip._active[0];
+					const { ctx } = chart;
+					const { x } = activePoint.element;
+					const topY = chart.scales.y.top;
+					const bottomY = chart.scales.y.bottom;
 
-	const getX = d3
-		.scaleTime()
-		.domain([xMinValue, xMaxValue])
-		.range([margin.left, overwidth + margin.right]);
+					// draw vertical line
+					ctx.save();
+					ctx.beginPath();
+					ctx.moveTo(x, topY);
+					ctx.lineTo(x, bottomY);
+					ctx.lineWidth = 1;
+					ctx.strokeStyle = "#ffffff";
+					ctx.stroke();
+					ctx.restore();
+				}
+			},
+		},
+	];
 
-	const getY = d3
-		.scaleLinear()
-		.domain([yMinValue - 1, yMaxValue + 2])
-		.range([height, 0]);
+	const options = {
+		responsive: true,
+		animation: false,
+		interaction: {
+			mode: "nearest",
+			axis: "x",
+			intersect: false,
+		},
+		plugins: {
+			legend: {
+				display: false,
+			},
+			title: {
+				display: true,
+				text: text,
+				color: "white",
+				font: {
+					size: 20,
+					weight: "normal",
+					family: "'Open Sans','sans-serif'",
+				},
+			},
+			tooltip: {
+				callbacks: {
+					label: (item) => `${item.formattedValue} ${unit}`,
+				},
+			},
+		},
+		elements: {
+			point: {
+				radius: 0,
+			},
+			line: {
+				tension: 0.15,
+			},
+		},
+		scales: {
+			x: {
+				type: "time",
 
-	const getXAxis = (ref) => {
-		const xAxis = d3.axisBottom(getX);
-		d3.select(ref).call(xAxis.tickFormat(d3.timeFormat("%M:%S")));
+				time: {
+					minunit: "millisecond",
+					tooltipFormat: "HH:mm:ss.SSS",
+					displayFormats: {
+						millisecond: "HH:mm:ss",
+					},
+				},
+				grid: {
+					color: "#e1d9d1",
+				},
+				ticks: {
+					color: "#e1d9d1",
+					autoSkip: true,
+				},
+			},
+
+			y: {
+				grid: {
+					color: "#e1d9d1",
+				},
+				ticks: {
+					color: "#e1d9d1",
+				},
+			},
+		},
 	};
 
-	const getYAxis = (ref) => {
-		const yAxis = d3.axisLeft(getY).tickSize(-overwidth).tickPadding(7);
-		d3.select(ref).call(yAxis);
-	};
+	const labelsLength = [...Array(finalData.length).keys()];
+	let dataset = labelsLength.map((e, idx) => ({
+		x: timestamps[idx],
+		y: finalData[idx],
+	}));
 
-	const linePath = d3
-		.line(d3.curveStep)
-		.x((d) => getX(d.date))
-		.y((d) => getY(d.price))
-		.curve(d3.curveMonotoneX)(props.data_json);
+	// if (timestamps[0]) {
+	// 	dataset = labels.map((e, idx) => ({
+	// 		x: timestamps[idx],
+	// 		y: finalData[idx],
+	// 	}));
+	// } else {
+	// 	dataset = labels.map((e, idx) => ({
+	// 		x: labels[idx],
+	// 		y: finalData[idx],
+	// 	}));
+	// }
 
-	const areaPath = d3
-		.area()
-		.x((d) => getX(d.date))
-		.y0((d) => getY(d.price))
-		.y1(() => getY(yMinValue - 1))
-		.curve(d3.curveMonotoneX)(props.data_json);
-
-	const handleMouseMove = (e) => {
-		const bisect = d3.bisector((d) => d.date).left,
-			x0 = getX.invert(d3.pointer(e, this)[0]),
-			index = bisect(props.data_json, x0, 1);
-		setActiveIndex(index);
-	};
-
-	const handleMouseLeave = () => {
-		setActiveIndex(null);
+	const data = {
+		datasets: [
+			{
+				label: "Dataset 1",
+				data: dataset,
+				borderColor: "#ff3d12",
+				backgroundColor: "rgb(255,93,57)",
+				borderWidth: 1.4,
+			},
+		],
 	};
 
 	return (
-		//
-		<div>
-			<svg
-				viewBox={`${margin.left + margin.right + 200} 0 ${
-					width + margin.left + margin.right
-				} 
-			${height + margin.top + margin.bottom}`}
-				style={{
-					height: height,
-					position: "absolute",
-					zIndex: "1",
-					minHeight: height,
-					maxHeight: height,
-					width: width,
-				}}
-			>
-				<g
-					className="axis"
-					ref={getYAxis}
-					transform={`translate(${margin.left})`}
-				/>
-			</svg>
-
-			<div
-				style={{
-					width: width,
-					height: height,
-					position: "absolute",
-					zIndex: "2",
-					pointerEvents: "auto",
-					overflowX: "scroll",
-					flexDirection: "row-reverse",
-					overflowAnchor: "auto",
-				}}
-			>
-				<a className="title" target="_blank">
-					<text x="0" y={height + 50}>
-						{props.indi}
-					</text>
-				</a>
-
-				<svg
-					height={height}
-					viewBox={`0 0 ${overwidth + margin.left + margin.right} 
-							${height + margin.top + margin.bottom}`}
-					onMouseMove={handleMouseMove}
-					onMouseLeave={handleMouseLeave}
-					style={{ minHeight: height, maxHeight: height, width: "fit-content" }}
-				>
-					{/* <g className="axis" ref={getYAxis} transform={`translate(${margin.left })`} /> */}
-					<g
-						className="axis xAxis"
-						ref={getXAxis}
-						transform={`translate(${0},${height})`}
-					/>
-					// area and line paths
-					<path fill={color} d={areaPath} opacity={0.3} />
-					<path strokeWidth={3} fill="none" stroke={color} d={linePath} />
-					{props.data_json.map((item, index) => {
-						return (
-							<g key={index}>
-								// hovering text
-								<text
-									fill="#666"
-									x={getX(item.date)}
-									y={getY(item.price) - 20}
-									textAnchor="middle"
-								>
-									{index === activeIndex ? item.price : ""}
-								</text>
-								// hovering circle
-								<circle
-									cx={getX(item.date)}
-									cy={getY(item.price)}
-									r={index === activeIndex ? 4 : 2}
-									fill={color}
-									strokeWidth={index === activeIndex ? 2 : 0}
-									stroke="#fff"
-									// style={{ transition: "ease-out .1s" }}
-								/>
-							</g>
-						);
-					})}
-					// x- and y-axes // y-axis label // chart title // chart subtitle
-				</svg>
-			</div>
+		<div style={{ width: "650px", color: "white", marginTop: "50px" }}>
+			<Line options={options} data={data} plugins={plugins} />
 		</div>
 	);
 }
