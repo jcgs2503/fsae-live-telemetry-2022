@@ -94,7 +94,7 @@ class INTERNAL:
       LOCAL_SS=FIREBASE_GLOBAL_VAR.SLIST["SS"+id]
       LOCAL_SS.write(b"GET /"+PATH+b".json?shallow="+ujson.dumps(limit)+b" HTTP/1.0\r\n")
       LOCAL_SS.write(b"Host: "+FIREBASE_GLOBAL_VAR.GLOBAL_URL_ADINFO["host"]+b"\r\n\r\n")
-      LOCAL_OUTPUT=ujson.loads(LOCAL_SS.read().splitlines()[-1])
+      LOCAL_OUTPUT = ujson.loads(LOCAL_SS.read().decode("utf-8").split('\r\n')[-1])
       INTERNAL.disconnect(id)
       globals()[DUMP]=LOCAL_OUTPUT
       if cb:
